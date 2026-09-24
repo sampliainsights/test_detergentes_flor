@@ -1,0 +1,3808 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Samplia Insights · Flashcards Oxford · Rambla Catalunya</title>
+  <meta name="color-scheme" content="light" />
+  <meta name="description"
+    content="Informe interactivo de la activación de Flashcards Oxford en Samplia X Rambla Catalunya (Barcelona), 1 – 16 de septiembre de 2026. 1.286 encuestados." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet" />
+
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script defer
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <!-- Exportación a PDF: se cargan al final, no bloquean nada. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════════
+       SISTEMA VISUAL · Samplia Insights
+       1. Un solo acento. El rojo sólo aparece donde hay que mirar.
+       2. Filete, no sombra. Las tarjetas se separan por 1px y por aire.
+       3. La jerarquía la marcan el tamaño y el peso, no el color.
+       ═══════════════════════════════════════════════════════════════════ */
+    :root {
+      --ink: #0F1729;
+      --red: #E0253F;
+      --red-2: #E9455B;
+      --rose: #FBDBDF;
+      --blue: #375395;
+      --brick: #C21D03;
+
+      --blue-900: #23355F;
+      --blue-800: #293E6F;
+      --blue-700: #314A85;
+      --blue-500: #375395;
+      --blue-400: #5B72A8;
+      --blue-300: #8798BF;
+      --blue-200: #B3BED7;
+      --blue-100: #D3D9E8;
+
+      --n-0: #FFFFFF;
+      --n-50: #FBFBFC;
+      --n-100: #F4F5F7;
+      --n-200: #E9EAEE;
+      --n-300: #D7DAE1;
+      --n-500: #9BA1AE;
+      --n-600: #6C7280;
+      --n-700: #545B69;
+
+      --bg: #F7F8FA;
+      --surface: var(--n-0);
+      --line: var(--n-200);
+      --line-strong: var(--n-300);
+      --text: var(--ink);
+      --text-2: var(--n-700);
+      --text-3: var(--n-600);
+      --text-4: var(--n-500);
+      --accent: var(--red);
+      --ok: #2F9E6B;
+
+      --sh-pop: 0 12px 32px -8px rgba(15, 23, 41, .18), 0 2px 6px rgba(15, 23, 41, .06);
+
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+
+      --rail: 272px;
+      --gap: 20px;
+
+      --ease: cubic-bezier(.22, .61, .36, 1);
+      --ease-io: cubic-bezier(.645, .045, .355, 1);
+      --dur-fast: .2s;
+      --dur: .3s;
+      --dur-slow: .6s;
+      --dur-slower: .8s;
+
+      --key-grad: linear-gradient(to right, var(--red) 0%, var(--brick) 100%);
+    }
+
+    @supports (background-image: linear-gradient(in oklab, red, blue)) {
+      :root {
+        --key-grad: linear-gradient(to right in oklab, var(--red) 0%, var(--brick) 100%);
+      }
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 24px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.55;
+      letter-spacing: -.005em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: 'tnum' 1, 'cv11' 1;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(to right, rgba(15, 23, 41, .028) 1px, transparent 1px) 0 0 / 88px 88px,
+        linear-gradient(to bottom, rgba(15, 23, 41, .028) 1px, transparent 1px) 0 0 / 88px 88px;
+      -webkit-mask-image: linear-gradient(to bottom, #000 0, transparent 900px);
+      mask-image: linear-gradient(to bottom, #000 0, transparent 900px);
+    }
+
+    ::selection {
+      background: var(--rose);
+      color: var(--ink);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+
+    .eyebrow,
+    .kpi-l,
+    .s-head span,
+    .open-kicker,
+    .duo-h,
+    .rail-h,
+    footer h5 {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    /* ═══ RAIL · FILTROS ══════════════════════════════════════════════ */
+    .rail {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--rail);
+      background: var(--ink);
+      color: var(--n-0);
+      display: flex;
+      flex-direction: column;
+      z-index: 40;
+      padding: 24px 0 0;
+      border-right: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .rail-brand {
+      padding: 0 22px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, .09);
+    }
+
+    .rail-brand img {
+      width: 100%;
+      max-width: 196px;
+      height: auto;
+      display: block;
+      aspect-ratio: 480 / 143;
+    }
+
+    .rail-body {
+      padding: 18px 22px 8px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      flex: 1;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, .18) transparent;
+    }
+
+    .rail-h {
+      color: rgba(255, 255, 255, .42);
+      margin-bottom: 11px;
+    }
+
+    .fgroup+.fgroup,
+    .rail-reset+.fgroup {
+      margin-top: 24px;
+    }
+
+    .chips-f {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip-f {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .045);
+      color: rgba(255, 255, 255, .68);
+      font: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: -.005em;
+      padding: 6px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease);
+    }
+
+    .chip-f:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, .34);
+    }
+
+    .chip-f[aria-pressed="true"] {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .rail-reset {
+      margin-top: 14px;
+      appearance: none;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: transparent;
+      color: rgba(255, 255, 255, .6);
+      font: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: color .18s var(--ease), border-color .18s var(--ease);
+    }
+
+    .rail-reset:hover {
+      color: #fff;
+      border-color: var(--red-2);
+    }
+
+    .rail-reset:disabled {
+      opacity: .35;
+      cursor: default;
+    }
+
+    /* ── Desplegable de preguntas, al final del rail ── */
+    .qfold {
+      margin-top: 26px;
+      border-top: 1px solid rgba(255, 255, 255, .09);
+      padding-top: 16px;
+    }
+
+    .qfold-btn {
+      appearance: none;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .045);
+      color: rgba(255, 255, 255, .82);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      padding: 10px 12px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      text-align: left;
+      transition: background-color .18s var(--ease), border-color .18s var(--ease);
+    }
+
+    .qfold-btn:hover {
+      background: rgba(255, 255, 255, .09);
+      border-color: rgba(255, 255, 255, .28);
+    }
+
+    .qfold-btn .caret {
+      margin-left: auto;
+      flex: 0 0 auto;
+      transition: transform .22s var(--ease);
+    }
+
+    .qfold-btn[aria-expanded="true"] .caret {
+      transform: rotate(180deg);
+    }
+
+    .qfold-list {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .3s var(--ease-io);
+    }
+
+    .qfold-btn[aria-expanded="true"]+.qfold-list {
+      grid-template-rows: 1fr;
+    }
+
+    .qfold-inner {
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .qfold-list ol {
+      list-style: none;
+      padding: 10px 0 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      counter-reset: q;
+    }
+
+    .qfold-list a {
+      display: flex;
+      gap: 9px;
+      padding: 7px 9px;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, .58);
+      text-decoration: none;
+      font-size: 11.5px;
+      line-height: 1.4;
+      font-weight: 500;
+      transition: color .18s var(--ease), background-color .18s var(--ease);
+    }
+
+    .qfold-list a::before {
+      counter-increment: q;
+      content: counter(q);
+      flex: 0 0 16px;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: rgba(255, 255, 255, .3);
+      padding-top: 2px;
+    }
+
+    .qfold-list a:hover {
+      background: rgba(255, 255, 255, .06);
+      color: #fff;
+    }
+
+    .qfold-list a:hover::before {
+      color: var(--red-2);
+    }
+
+    /* ── Menú de secciones ── */
+    .secnav ol {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      counter-reset: sec;
+    }
+
+    .secnav ol a {
+      display: flex;
+      gap: 9px;
+      padding: 7px 9px;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, .58);
+      text-decoration: none;
+      font-size: 11.5px;
+      line-height: 1.4;
+      font-weight: 500;
+      transition: color .18s var(--ease), background-color .18s var(--ease);
+    }
+
+    .secnav ol a::before {
+      counter-increment: sec;
+      content: counter(sec, decimal-leading-zero);
+      flex: 0 0 20px;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: rgba(255, 255, 255, .3);
+      padding-top: 2px;
+    }
+
+    .secnav ol a:hover {
+      background: rgba(255, 255, 255, .06);
+      color: #fff;
+    }
+
+    .secnav ol a:hover::before {
+      color: var(--red-2);
+    }
+
+    .secnav ol a.active {
+      background: rgba(255, 255, 255, .08);
+      color: #fff;
+    }
+
+    .secnav ol a.active::before {
+      color: var(--red-2);
+    }
+
+    .rail-foot {
+      padding: 12px 22px 16px;
+      border-top: 1px solid rgba(255, 255, 255, .09);
+      font-size: 11px;
+      color: rgba(255, 255, 255, .48);
+    }
+
+    #stamp {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      background: none;
+      border: 0;
+      padding: 4px 0;
+      font: inherit;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .48);
+      text-align: left;
+    }
+
+    #stamp .dot {
+      flex: 0 0 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ok);
+    }
+
+    /* ═══ LIENZO ═══════════════════════════════════════════════════════ */
+    .canvas {
+      margin-left: var(--rail);
+      padding: 0 clamp(20px, 3.4vw, 52px) 96px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    /* ═══ APERTURA ═════════════════════════════════════════════════════ */
+    .open {
+      padding: clamp(48px, 7vw, 92px) 0 clamp(30px, 3.5vw, 48px);
+    }
+
+    .open-kicker {
+      color: var(--red);
+      margin-bottom: 18px;
+    }
+
+    .open h1 {
+      font-size: clamp(38px, 5.6vw, 76px);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: -.035em;
+      max-width: 17ch;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .open h1 em,
+    .s-head h2 em,
+    .key {
+      font-style: normal;
+      background-image: var(--key-grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .open h1 em .aw,
+    .s-head h2 em .aw,
+    .key .aw {
+      background-image: var(--key-grad);
+      background-repeat: no-repeat;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    @supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+
+      .open h1 em,
+      .s-head h2 em,
+      .key,
+      .open h1 em .aw,
+      .s-head h2 em .aw,
+      .key .aw {
+        background-image: none;
+        color: var(--red);
+      }
+    }
+
+    .open p {
+      margin-top: 20px;
+      max-width: 62ch;
+      font-size: clamp(15px, 1.15vw, 17px);
+      line-height: 1.62;
+      color: var(--text-2);
+      text-wrap: pretty;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+    }
+
+    .meta span svg {
+      flex: 0 0 auto;
+      color: var(--blue-400);
+    }
+
+    .meta span b {
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .meta-note {
+      margin: 10px 0 0;
+      max-width: min(100%, 720px);
+      font-size: 7px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--text-2);
+    }
+
+    .meta-note b {
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    /* ═══ BOTONERA ═════════════════════════════════════════════════════ */
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -.012em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    }
+
+    .heart-icon {
+      flex: 0 0 auto;
+      transform-origin: center;
+      animation: heartbeat 1.6s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      20% {
+        transform: scale(1.1);
+      }
+
+      40% {
+        transform: scale(1.02);
+      }
+
+      60% {
+        transform: scale(1.08);
+      }
+
+      80% {
+        transform: scale(1);
+      }
+    }
+
+    .btn:hover {
+      border-color: var(--blue-300);
+      transform: translateY(-1px);
+    }
+
+    .btn svg {
+      flex: 0 0 auto;
+      color: var(--blue-400);
+      transition: color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+    }
+
+    .btn:hover svg {
+      color: var(--red);
+      transform: translateX(2px);
+    }
+
+    .btn-pri {
+      border-color: transparent;
+      background-color: var(--red);
+      background-image: linear-gradient(to bottom right, var(--red), var(--brick));
+      color: #fff;
+    }
+
+    .btn-pri svg {
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .btn-pri:hover {
+      border-color: transparent;
+      box-shadow: var(--sh-pop);
+    }
+
+    .btn-pri:hover svg {
+      color: #fff;
+      transform: translateY(2px);
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: wait;
+      transform: none;
+    }
+
+    /* ═══ TIRA DE KPI ══════════════════════════════════════════════════ */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 0;
+      margin-top: clamp(34px, 4.5vw, 56px);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .kpi {
+      padding: 24px 16px 22px 0;
+      border-right: 1px solid var(--line);
+      min-width: 0;
+    }
+
+    .kpi:last-child {
+      border-right: 0;
+    }
+
+    .kpi:not(:first-child) {
+      padding-left: 16px;
+    }
+
+    .kpi-v {
+      font-size: clamp(26px, 2.6vw, 38px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.04em;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .kpi:first-child .kpi-v {
+      color: var(--red);
+    }
+
+    .kpi-u {
+      font-size: .44em;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      margin-left: 3px;
+      color: var(--text-4);
+    }
+
+    .kpi-l {
+      margin-top: 11px;
+      color: var(--text-4);
+    }
+
+    .kpi-n {
+      margin-top: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: -.005em;
+      color: var(--text-4);
+    }
+
+    /* Al partirse la fila, la raya vertical sobra al final de cada fila y
+       hace falta una horizontal que separe la de arriba de la de abajo. */
+    @media (max-width: 1560px) {
+      .kpis {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .kpi:nth-child(4n) {
+        border-right: 0;
+      }
+
+      .kpi:nth-child(-n+4) {
+        border-bottom: 1px solid var(--line);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .kpi:nth-child(n) {
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .kpi:nth-child(2n),
+      .kpi:last-child {
+        border-right: 0;
+      }
+
+      .kpi:nth-last-child(-n+1) {
+        border-bottom: 0;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .kpis {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .kpi:nth-child(n) {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding-left: 0 !important;
+      }
+
+      .kpi:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    /* ═══ SECCIONES ════════════════════════════════════════════════════ */
+    section {
+      padding-top: clamp(50px, 6vw, 84px);
+      scroll-margin-top: 24px;
+    }
+
+    .section-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--gap);
+      align-items: stretch;
+    }
+
+    /* Ambas secciones del par comparten altura: la columna flexible
+       reparte el alto sobrante al `.grid`, y de ahí a la tarjeta y a su
+       lienzo, que crece con `flex-grow`. */
+    .section-pair section {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-pair section > .grid {
+      flex: 1 1 auto;
+    }
+
+    .section-pair > section:first-child {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .section-pair > section:last-child {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    @media (max-width: 1080px) {
+      .section-pair {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .section-pair > section:first-child,
+      .section-pair > section:last-child {
+        grid-column: 1;
+        grid-row: auto;
+      }
+    }
+
+    .s-head {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-strong);
+      margin-bottom: 20px;
+    }
+
+    .s-head span {
+      color: var(--red);
+      flex: 0 0 auto;
+      padding-top: 2px;
+    }
+
+    .s-head h2 {
+      font-size: clamp(21px, 2.3vw, 30px);
+      font-weight: 800;
+      letter-spacing: -.032em;
+      line-height: 1.12;
+      color: var(--ink);
+    }
+
+    .s-lede {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--text-3);
+      max-width: 74ch;
+      text-wrap: pretty;
+    }
+
+    /* ═══ REJILLA ══════════════════════════════════════════════════════ */
+    .grid {
+      display: grid;
+      gap: var(--gap);
+      margin-top: 24px;
+      align-items: stretch;
+    }
+
+    .g-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .g-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .g-32 {
+      grid-template-columns: 3fr 2fr;
+    }
+
+    .g-23 {
+      grid-template-columns: 2fr 3fr;
+    }
+
+    .span2 {
+      grid-column: span 2;
+    }
+
+    .span3 {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 1080px) {
+      .g-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .g-32,
+      .g-23 {
+        grid-template-columns: 1fr;
+      }
+
+      .span3,
+      .span2 {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 760px) {
+
+      .g-2,
+      .g-3 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .span2,
+      .span3 {
+        grid-column: auto;
+      }
+    }
+
+    /* ═══ TARJETA ══════════════════════════════════════════════════════ */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 22px 22px 20px;
+      min-width: 0;
+      container-type: inline-size;
+      transition: border-color .2s var(--ease);
+      display: flex;
+      flex-direction: column;
+      scroll-margin-top: 20px;
+    }
+
+    .card:hover {
+      border-color: var(--line-strong);
+    }
+
+    .card>.cv {
+      flex: 1 1 auto;
+      min-height: 170px;
+    }
+
+    .card h3,
+    .card-hd>h3 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.018em;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .card-hd {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-hd .chips {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .card .sub {
+      margin-top: 16px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: var(--text-3);
+      text-wrap: pretty;
+    }
+
+    .base {
+      display: none;
+    }
+
+    /* ═══ ALTURAS DE LIENZO ════════════════════════════════════════════ */
+    .cv {
+      position: relative;
+      margin-top: 16px;
+    }
+
+    .cv-190 {
+      height: 190px;
+    }
+
+    .cv-220 {
+      height: 220px;
+    }
+
+    .cv-260 {
+      height: 260px;
+    }
+
+    .cv-300 {
+      height: 300px;
+    }
+
+    .cv-donut {
+      height: 290px;
+    }
+
+    /* ═══ PÍLDORA DE NOTA ══════════════════════════════════════════════ */
+    .scorechip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      flex: 0 0 auto;
+      min-height: 32px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--n-100);
+      border: 1px solid var(--line);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      white-space: nowrap;
+    }
+
+    .scorechip:empty {
+      display: none;
+    }
+
+    .scorechip b {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      text-transform: none;
+      color: var(--ink);
+    }
+
+    /* Píldoras de género: un punto de color hace de leyenda sin leyenda. */
+    .scorechip.gen {
+      align-items: center;
+    }
+
+    .scorechip.gen i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .scorechip.up {
+      color: var(--ok);
+      background: rgba(47, 158, 107, .07);
+      border-color: rgba(47, 158, 107, .3);
+    }
+
+    .scorechip.down {
+      color: var(--brick);
+      background: rgba(194, 29, 3, .06);
+      border-color: rgba(194, 29, 3, .28);
+    }
+
+    /* Minipíldora comparativa: la referencia de 2025 pegada al dato de
+       ahora, dentro de la misma insignia o del propio KPI, para que la
+       evolución se lea sin saltar a otro sitio. El color lo pone el signo
+       de la diferencia; el tamaño, el dato al que acompaña. */
+    .minipill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 3px;
+      border-radius: 999px;
+      font-style: normal;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .minipill b {
+      font-weight: 800;
+      letter-spacing: -.01em;
+      text-transform: none;
+      color: inherit;
+    }
+
+    .scorechip .minipill {
+      margin-left: 3px;
+      padding: 1px 5px;
+      font-size: 8px;
+      letter-spacing: .01em;
+    }
+
+    .scorechip .minipill b {
+      font-size: 9.5px;
+    }
+
+    .kpi .minipill {
+      margin-left: 6px;
+      padding: 2px 6px;
+      font-size: 9px;
+      letter-spacing: .02em;
+    }
+
+    .kpi .minipill b {
+      font-size: 10.5px;
+    }
+
+    .minipill.up {
+      color: var(--ok);
+      background: rgba(47, 158, 107, .1);
+    }
+
+    .minipill.down {
+      color: var(--brick);
+      background: rgba(194, 29, 3, .09);
+    }
+
+    /* Leaderboard de situación académica. */
+    .leaderboard {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .leader-row {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(100deg, var(--n-50), var(--surface));
+    }
+
+    .leader-rank {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--n-100);
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .leader-row:nth-child(1) .leader-rank {
+      background: var(--b-100);
+      color: var(--b-700);
+    }
+
+    .leader-row:nth-child(2) .leader-rank {
+      background: var(--n-200);
+      color: var(--n-700);
+    }
+
+    .leader-row:nth-child(3) .leader-rank {
+      background: #f6e5d6;
+      color: #8a4d25;
+    }
+
+    .leader-main {
+      min-width: 0;
+    }
+
+    .leader-label {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 750;
+      line-height: 1.3;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .leader-track {
+      height: 5px;
+      margin-top: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--n-100);
+    }
+
+    .leader-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--b-400), var(--b-600));
+    }
+
+    .leader-row:nth-child(1) .leader-fill {
+      background: linear-gradient(90deg, var(--b-500), var(--b-700));
+    }
+
+    .leader-value {
+      min-width: 72px;
+      text-align: right;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -.015em;
+    }
+
+    .leader-value small {
+      display: block;
+      margin-top: 2px;
+      color: var(--text-4);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 480px) {
+      .leader-row {
+        grid-template-columns: 28px minmax(0, 1fr) auto;
+        gap: 9px;
+        padding-inline: 10px;
+      }
+
+      .leader-rank {
+        width: 25px;
+        height: 25px;
+      }
+
+      .leader-value {
+        min-width: 58px;
+      }
+    }
+
+    .treemap {
+      position: relative;
+      height: clamp(320px, 34vw, 390px);
+      min-height: 320px;
+      margin-top: 20px;
+      overflow: hidden;
+      border-radius: 14px;
+      background: var(--n-100);
+    }
+
+    .treemap-tile {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-width: 0;
+      padding: 14px;
+      overflow: hidden;
+      border: 3px solid var(--surface);
+      border-radius: 12px;
+      background: var(--tile, var(--blue));
+      color: var(--tile-ink, #fff);
+      transition: filter .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .treemap-tile:hover {
+      z-index: 1;
+      filter: saturate(1.12) brightness(1.04);
+      transform: scale(.99);
+    }
+
+    .treemap-tile strong {
+      display: block;
+      max-width: 24ch;
+      font-size: clamp(11px, 1.25vw, 15px);
+      font-weight: 800;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    .treemap-tile span {
+      margin-top: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      opacity: .78;
+    }
+
+    /* Teselas estrechas (técnicas minoritarias): el texto gira en vertical
+       para que la etiqueta quepa entera en vez de cortarse. */
+    .treemap-tile.is-vert {
+      align-items: flex-start;
+      padding: 8px 6px;
+    }
+
+    .treemap-tile.is-vert strong {
+      max-width: none;
+      max-height: calc(100% - 18px);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    .treemap-tile.is-vert span {
+      margin-top: 4px;
+      font-size: 10px;
+    }
+
+    .treemap-tile.no-pct span {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .treemap {
+        height: 390px;
+      }
+
+      .treemap-tile {
+        padding: 10px;
+      }
+
+      .treemap-tile strong {
+        font-size: 11px;
+      }
+
+      .treemap-tile span {
+        font-size: 10px;
+      }
+    }
+
+    .bandsum {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .bandsum span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--n-50);
+      border: 1px solid var(--line);
+      font-size: 11.5px;
+      color: var(--text-3);
+    }
+
+    .bandsum i {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      flex: 0 0 auto;
+    }
+
+    .bandsum b {
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -.015em;
+    }
+
+    /* ═══ NPS ══════════════════════════════════════════════════════════ */
+    .nps {
+      display: grid;
+      grid-template-columns: minmax(0, 210px) minmax(0, 1fr);
+      gap: 26px;
+      margin-top: 18px;
+      align-items: center;
+    }
+
+    @container (max-width: 560px) {
+      .nps {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+      }
+    }
+
+    .nps-score {
+      text-align: center;
+    }
+
+    .nps-score b {
+      display: block;
+      font-size: 60px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.045em;
+      color: var(--red);
+    }
+
+    .nps-score span {
+      display: block;
+      margin-top: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-4);
+    }
+
+    .nps-scale {
+      position: relative;
+      margin-top: 16px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(to right, var(--n-300) 0%, var(--n-200) 50%, var(--blue-200) 100%);
+    }
+
+    .nps-scale i {
+      position: absolute;
+      top: -4px;
+      width: 3px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--red);
+      transform: translateX(-50%);
+      transition: left .8s var(--ease-io);
+    }
+
+    .nps-scale em {
+      position: absolute;
+      top: 12px;
+      font-style: normal;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--text-4);
+    }
+
+    .nps-scale em.lo {
+      left: 0;
+    }
+
+    .nps-scale em.hi {
+      right: 0;
+    }
+
+    .nps-split {
+      display: flex;
+      height: 46px;
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      background: var(--n-100);
+    }
+
+    .nps-split div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -.015em;
+      min-width: 0;
+      overflow: hidden;
+      transition: width .8s var(--ease-io);
+    }
+
+    .nps-key {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      margin-top: 12px;
+      font-size: 11.5px;
+      color: var(--text-3);
+    }
+
+    .nps-key span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    .nps-key i {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      flex: 0 0 auto;
+    }
+
+    .nps-key b {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .duo-h {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--text-4);
+    }
+
+    /* ═══ LECTURA / INSIGHT ════════════════════════════════════════════ */
+    .reads {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 22px 40px;
+      margin-top: 24px;
+    }
+
+    .read {
+      padding: 2px 0 2px 20px;
+      border-left: 2px solid var(--blue-200);
+    }
+
+    .read h4 {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -.015em;
+      color: var(--ink);
+      margin-bottom: 7px;
+      text-wrap: balance;
+    }
+
+    .read p {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--text-2);
+      text-wrap: pretty;
+    }
+
+    .read p b {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .read.warn {
+      border-left-color: var(--red);
+    }
+
+    .read.warn h4 {
+      color: var(--brick);
+    }
+
+    /* ═══ CTA DE CIERRE ════════════════════════════════════════════════ */
+    .cta-close {
+      position: relative;
+      overflow: hidden;
+      margin-top: clamp(56px, 7vw, 92px);
+      padding: clamp(38px, 5.5vw, 66px) clamp(24px, 5vw, 56px);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      text-align: center;
+    }
+
+    .cta-close-marquee {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .cta-close-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: cta-close-scroll 70s linear infinite;
+    }
+
+    .cta-close-marquee-track span {
+      font-size: 13vw;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.04em;
+      white-space: nowrap;
+      color: var(--ink);
+      opacity: .025;
+    }
+
+    @keyframes cta-close-scroll {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .cta-close-content {
+      position: relative;
+    }
+
+    .cta-close-h {
+      margin: 0 auto;
+      max-width: 38ch;
+      font-size: clamp(23px, 2.6vw, 36px);
+      font-weight: 800;
+      line-height: 1.14;
+      letter-spacing: -.03em;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .cta-close-btn {
+      position: relative;
+      margin-top: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 28px;
+      border: 3px solid transparent;
+      border-radius: 999px;
+      color: var(--n-0);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      text-decoration: none;
+      text-shadow: 0 0 4px rgba(255, 255, 255, .15);
+      background-color: var(--red);
+      background-image:
+        linear-gradient(to bottom right, var(--red), var(--brick)),
+        linear-gradient(125deg, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, .6) 50%, rgba(255, 255, 255, 0) 53%);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      background-size: 100%, 200%;
+      background-position: 0px, -250px;
+      animation: cta-close-border-glint 4s linear infinite;
+      transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+    }
+
+    @keyframes cta-close-border-glint {
+      0% {
+        background-position: 0px, -250px;
+      }
+
+      25% {
+        background-position: 0px, -200px;
+      }
+
+      75%,
+      100% {
+        background-position: 0px, 50px;
+      }
+    }
+
+    .cta-close-btn:hover {
+      box-shadow: var(--sh-pop);
+      transform: translateY(-2px);
+    }
+
+    .cta-close-arrow {
+      transition: transform var(--dur-fast) var(--ease);
+    }
+
+    .cta-close-btn:hover .cta-close-arrow {
+      transform: translateX(3px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .cta-close-marquee-track,
+      .cta-close-btn {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .cta-close-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* ═══ ESTADOS ══════════════════════════════════════════════════════ */
+    .fail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+      padding: 18px;
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--r-md);
+      background: repeating-linear-gradient(-45deg, var(--n-50) 0 7px, var(--n-100) 7px 14px);
+      color: var(--text-3);
+      position: absolute;
+      inset: 0;
+    }
+
+    .fail b {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--text-2);
+    }
+
+    .fail small {
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--text-4);
+      max-width: 34ch;
+    }
+
+    /* ═══ PIE ══════════════════════════════════════════════════════════ */
+    footer {
+      margin-top: clamp(56px, 7vw, 92px);
+      padding-top: 24px;
+      border-top: 1px solid var(--line-strong);
+    }
+
+    footer h5 {
+      color: var(--text-4);
+      margin-bottom: 12px;
+    }
+
+    footer ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 7px 32px;
+    }
+
+    footer li {
+      position: relative;
+      padding-left: 16px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-4);
+      text-wrap: pretty;
+    }
+
+    footer li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 1px;
+      background: var(--line-strong);
+    }
+
+    /* ═══ MÓVIL ════════════════════════════════════════════════════════ */
+    .burger {
+      display: none;
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 60;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-md);
+      background: var(--n-0);
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: var(--sh-pop);
+    }
+
+    .scrim {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 35;
+      background: rgba(15, 23, 41, .45);
+    }
+
+    @media (max-width: 980px) {
+      .burger {
+        display: block;
+      }
+
+      .rail {
+        transform: translateX(-100%);
+        transition: transform .28s var(--ease);
+        box-shadow: var(--sh-pop);
+      }
+
+      .rail.open {
+        transform: none;
+      }
+
+      .rail.open~.scrim {
+        display: block;
+      }
+
+      .canvas {
+        margin-left: 0;
+        padding-top: 70px;
+      }
+
+      .open {
+        padding-top: 20px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .card {
+        padding: 18px 16px 16px;
+      }
+
+      .card-hd .chips {
+        justify-content: flex-start;
+      }
+
+      .tools {
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      .btn {
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+    }
+
+    .fbar {
+      display: none;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 22px;
+      padding: 12px 14px;
+      border: 1px solid var(--line-strong);
+      border-left: 3px solid var(--red);
+      border-radius: var(--r-md);
+      background: var(--surface);
+      font-size: 12.5px;
+      color: var(--text-2);
+    }
+
+    .fbar.on {
+      display: flex;
+    }
+
+    .fbar b {
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .fbar button {
+      margin-left: auto;
+      appearance: none;
+      border: 1px solid var(--line-strong);
+      background: var(--n-0);
+      color: var(--ink);
+      font: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .fbar button:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* ═══ ENTRADAS AL ENTRAR EN PANTALLA ═══════════════════════════════ */
+    [data-reveal] {
+      --rise: 34px;
+      transition:
+        opacity var(--dur-slower) var(--ease-io) calc(var(--d, 0) * 70ms),
+        transform var(--dur-slower) var(--ease-io) calc(var(--d, 0) * 70ms);
+    }
+
+    [data-reveal].rv {
+      opacity: 0;
+      transform: translateY(var(--rise));
+    }
+
+    [data-reveal].rv.is-inview {
+      opacity: 1;
+      transform: none;
+    }
+
+    [data-reveal="card"] {
+      --rise: 16px;
+      transition:
+        opacity .5s var(--ease-io) calc(var(--d, 0) * 70ms),
+        transform .5s var(--ease-io) calc(var(--d, 0) * 70ms),
+        border-color var(--dur-fast) var(--ease);
+    }
+
+    [data-reveal="card"].rv {
+      transform: scale(.97) translateY(var(--rise));
+    }
+
+    [data-reveal="card"].rv.is-inview {
+      transform: none;
+    }
+
+    [data-anim] .aw {
+      display: inline-block;
+      opacity: 0;
+      filter: blur(6px);
+      transform: translateY(.34em);
+      transition: opacity .5s var(--ease), transform .5s var(--ease), filter .5s var(--ease);
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: inherit;
+    }
+
+    [data-anim].in .aw {
+      opacity: 1;
+      filter: blur(0);
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .aw,
+      [data-reveal].rv {
+        opacity: 1 !important;
+        filter: none !important;
+        transform: none !important;
+      }
+    }
+
+    /* ═══ MODO EXPORTACIÓN ═════════════════════════════════════════════ */
+    body.pdf-mode {
+      width: 1240px !important;
+      overflow: visible !important;
+    }
+
+    body.pdf-mode .rail,
+    body.pdf-mode .burger,
+    body.pdf-mode .scrim,
+    body.pdf-mode .tools,
+    body.pdf-mode .cta-close-marquee {
+      display: none !important;
+    }
+
+    body.pdf-mode .canvas {
+      margin-left: 0 !important;
+      padding: 0 32px 32px !important;
+    }
+
+    body.pdf-mode [data-reveal].rv {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    body.pdf-mode .aw {
+      opacity: 1 !important;
+      filter: none !important;
+      transform: none !important;
+    }
+
+    body.pdf-mode .card:hover {
+      border-color: var(--line) !important;
+    }
+
+    /* html2canvas no sabe recortar un fondo contra los glifos
+       (`background-clip: text`). En exportación, color plano. */
+    body.pdf-mode .open h1 em,
+    body.pdf-mode .s-head h2 em,
+    body.pdf-mode .key,
+    body.pdf-mode .open h1 em .aw,
+    body.pdf-mode .s-head h2 em .aw,
+    body.pdf-mode .key .aw {
+      background-image: none !important;
+      -webkit-background-clip: border-box !important;
+      background-clip: border-box !important;
+      color: var(--red) !important;
+    }
+
+    body.pdf-mode .open {
+      padding: 10px 0 18px !important;
+    }
+
+    body.pdf-mode section {
+      padding-top: 26px !important;
+    }
+
+    body.pdf-mode .kpis {
+      margin-top: 22px !important;
+    }
+
+    body.pdf-mode .cta-close {
+      margin-top: 28px !important;
+      padding: 30px 28px !important;
+    }
+
+    body.pdf-mode footer {
+      margin-top: 28px !important;
+    }
+
+    /* Banda de cabecera que se repite en cada página del PDF. */
+    .pdfhero {
+      position: fixed;
+      left: -20000px;
+      top: 0;
+      width: 1240px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 18px 26px;
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .pdfhero img {
+      width: 150px;
+      height: auto;
+      flex: 0 0 auto;
+    }
+
+    .pdfhero .t {
+      border-left: 1px solid rgba(255, 255, 255, .18);
+      padding-left: 22px;
+      min-width: 0;
+    }
+
+    .pdfhero .t b {
+      display: block;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.028em;
+      line-height: 1.15;
+    }
+
+    .pdfhero .t span {
+      display: block;
+      margin-top: 4px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .62);
+    }
+
+    .pdfhero .r {
+      margin-left: auto;
+      text-align: right;
+      flex: 0 0 auto;
+    }
+
+    .pdfhero .r b {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: var(--red-2);
+    }
+
+    .pdfhero .r span {
+      display: block;
+      margin-top: 3px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, .62);
+    }
+
+    .pdfwait {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 41, .72);
+      backdrop-filter: blur(3px);
+      color: #fff;
+    }
+
+    .pdfwait.on {
+      display: flex;
+    }
+
+    .pdfwait div {
+      text-align: center;
+    }
+
+    .pdfwait b {
+      display: block;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .pdfwait span {
+      display: block;
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, .7);
+    }
+
+    .pdfwait .bar {
+      width: 260px;
+      height: 4px;
+      margin: 16px auto 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .18);
+      overflow: hidden;
+    }
+
+    .pdfwait .bar i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--red);
+      border-radius: 999px;
+      transition: width .25s linear;
+    }
+
+    @media print {
+
+      .rail,
+      .burger,
+      .tools,
+      .scrim {
+        display: none !important;
+      }
+
+      .canvas {
+        margin-left: 0;
+      }
+
+      body::before {
+        display: none;
+      }
+
+      [data-reveal].rv,
+      .aw {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="burger" id="burger" type="button" aria-label="Abrir filtros">☰</button>
+
+  <nav class="rail" id="rail" aria-label="Filtros del informe">
+    <div class="rail-brand">
+      <img id="logo" alt="Samplia · Turning tryers into buyers" />
+    </div>
+
+    <div class="rail-body">
+      <div class="fgroup">
+        <div class="rail-h" id="h-gen">Género</div>
+        <div class="chips-f" id="f-gen" role="group" aria-labelledby="h-gen"></div>
+      </div>
+
+      <div class="fgroup">
+        <div class="rail-h" id="h-age">Rango de edad</div>
+        <div class="chips-f" id="f-age" role="group" aria-labelledby="h-age"></div>
+      </div>
+
+      <button class="rail-reset" id="reset" type="button" disabled>Limpiar filtros</button>
+
+      <div class="fgroup">
+        <div class="rail-h" id="h-sec">Secciones del informe</div>
+        <nav class="secnav" aria-labelledby="h-sec">
+          <ol id="seclist-ol"></ol>
+        </nav>
+      </div>
+
+      <div class="qfold">
+        <button class="qfold-btn" id="qfold" type="button" aria-expanded="false" aria-controls="qlist">
+          Preguntas de la encuesta
+          <svg class="caret" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3 4.5 6 7.5l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+        <div class="qfold-list" id="qlist">
+          <div class="qfold-inner">
+            <ol id="qlist-ol"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rail-foot">
+      <div id="stamp"><span class="dot" aria-hidden="true"></span><span id="stampTxt">Datos cargados</span></div>
+    </div>
+  </nav>
+  <div class="scrim" id="scrim"></div>
+
+  <main class="canvas">
+    <div class="wrap">
+
+      <header class="open" id="apertura">
+        <div class="open-kicker">Samplia Insights · Estudio post-activación</div>
+        <h1 data-anim>Flashcards <em>Oxford</em></h1>
+        <p>Encuesta realizada a usuarios que participaron en la activación.</p>
+
+        <div class="meta-row">
+          <div class="meta">
+            <span>
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 14.5s5-4.4 5-8a5 5 0 1 0-10 0c0 3.6 5 8 5 8Z" stroke="currentColor" stroke-width="1.4"
+                  stroke-linejoin="round" />
+                <circle cx="8" cy="6.5" r="1.8" stroke="currentColor" stroke-width="1.4" />
+              </svg>
+              Samplia X Rambla Catalunya, <b>Barcelona</b>
+            </span>
+            <span>
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <rect x="2.2" y="3.2" width="11.6" height="10.6" rx="2" stroke="currentColor" stroke-width="1.4" />
+                <path d="M2.2 6.4h11.6M5.6 1.8v2.6M10.4 1.8v2.6" stroke="currentColor" stroke-width="1.4"
+                  stroke-linecap="round" />
+              </svg>
+              Del <b>1</b> al <b>16 de septiembre de 2026</b>
+            </span>
+          </div>
+
+          <div class="tools">
+            <button class="btn" id="btn-pdf" type="button">
+              Descargar PDF
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 2v8m0 0L4.8 6.8M8 10l3.2-3.2M2.6 13.4h10.8" stroke="currentColor" stroke-width="1.6"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <a class="btn btn-pri" href="https://sampliainsights.github.io/samplia-evaluacion/" target="_blank"
+              rel="noopener noreferrer">
+              <svg class="heart-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M12 20.3c-.25 0-.5-.09-.7-.26C6.8 16.2 3 12.9 3 9.15 3 6.3 5.15 4 8 4c1.55 0 3 .74 4 1.95C13 4.74 14.45 4 16 4c2.85 0 5 2.3 5 5.15 0 3.75-3.8 7.05-8.3 10.89-.2.17-.45.26-.7.26Z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+              </svg>
+              Evalúa tu experiencia con Samplia
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8h9M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <p class="meta-note">
+          <span>Incluye comparativa vs activación realizada en: <br>Samplia X Gran Vía:
+            Del <b>02</b> al <b>08 de septiembre de 2.025</b></span>
+        </p>
+
+        <div class="fbar" id="fbar">
+          <span id="fbar-txt"></span>
+          <button type="button" id="fbar-clear">Quitar filtros</button>
+        </div>
+
+        <div class="kpis" id="kpis"></div>
+      </header>
+
+      <div id="caps"></div>
+
+      <section class="cta-close" data-reveal>
+        <div class="cta-close-marquee" aria-hidden="true">
+          <div class="cta-close-marquee-track">
+            <span>SAMPLIA TURNING TRYERS INTO BUYERS&nbsp;·&nbsp;SAMPLIA TURNING TRYERS INTO BUYERS&nbsp;·&nbsp;SAMPLIA TURNING TRYERS INTO BUYERS&nbsp;·&nbsp;</span>
+            <span>SAMPLIA TURNING TRYERS INTO BUYERS&nbsp;·&nbsp;SAMPLIA TURNING TRYERS INTO BUYERS&nbsp;·&nbsp;SAMPLIA TURNING TRYERS INTO BUYERS&nbsp;·&nbsp;</span>
+          </div>
+        </div>
+        <div class="cta-close-content">
+          <h2 class="cta-close-h">¿Quieres seguir en contacto con tus <span class="key">compradores potenciales</span>?</h2>
+          <a class="cta-close-btn" href="https://contacto.samplia.com/formulario" target="_blank"
+            rel="noopener noreferrer">
+            Sí, quiero
+            <svg class="cta-close-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3.5 8h9M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
+      <footer>
+        <h5>Fuentes y notas metodológicas</h5>
+        <ul>
+          <li>Base: 1.286 respuestas recogidas en Samplia X Rambla Catalunya (Barcelona) entre el 1 y el 16 de
+            septiembre de 2026.</li>
+          <li>Cada gráfico indica su propia base: las preguntas no obligatorias o condicionadas por una respuesta
+            anterior tienen menos respuestas que el total, y los porcentajes se calculan siempre sobre quienes
+            contestan esa pregunta.</li>
+          <li>Las preguntas sobre la utilidad percibida y el formato de las flashcards sólo se muestran a quienes
+            declaran haberlas usado (base 518). La del código de color tiene base 534: además de esos 518, la
+            contestan 16 personas que dicen no haberlas usado todavía.</li>
+          <li>El nivel de estudios sólo se pregunta a quienes declaran estar estudiando, solo o compaginándolo con un
+            trabajo (base 544).</li>
+          <li>Rangos de edad agrupados a partir de la edad declarada (18-24, 25-34, 35-44, 45-54, 55-64, 65+), con la
+            misma lógica de tramos que el resto de informes de la campaña. El tramo 18-24 incluye también a los 16
+            encuestados menores de 18 años.</li>
+          <li>El Top-2-Box es el porcentaje que elige las dos respuestas más altas de la escala (Excelente y
+            Bueno/Buena).</li>
+          <li>El NPS sigue el estándar: promotores (9-10) menos detractores (0-6), sobre el total de quienes puntúan.</li>
+          <li>La pregunta abierta sobre la marca Oxford se representa mediante su categorización temática.</li>
+          <li>Los filtros de género y edad recalculan todos los indicadores del informe, incluidos los KPI de cabecera y
+            las lecturas de negocio.</li>
+          <li>La minipíldora verde o roja que acompaña a un dato lo compara con la activación anterior de Oxford en
+            Samplia X Gran Vía (del 2 al 8 de septiembre de 2025), cuyo valor lleva dentro junto a la diferencia:
+            Top-2-Box del código de color 85%, «Sí, seguro» sobre si ayudarán a estudiar mejor 40%, media de
+            intención de recomendación 7,76 y 53% de promotores (9-10). Son cifras cerradas de aquel estudio; la
+            diferencia se calcula contra el dato de la vista activa, así que se mueve con el filtro.</li>
+        </ul>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- Banda de cabecera del PDF: se captura una vez y se repite en cada página. -->
+  <div class="pdfhero" id="pdfhero" aria-hidden="true">
+    <img id="pdflogo" alt="" />
+    <div class="t">
+      <b>Flashcards Oxford</b>
+      <span>Samplia X Rambla Catalunya, Barcelona · 1 – 16 sep 2026</span>
+    </div>
+    <div class="r">
+      <b>Samplia Insights</b>
+      <span id="pdfhero-n">1.286 encuestados</span>
+    </div>
+  </div>
+
+  <div class="pdfwait" id="pdfwait" role="status" aria-live="polite">
+    <div>
+      <b>Generando el PDF…</b>
+      <span id="pdfwait-t">Preparando el informe</span>
+      <div class="bar"><i id="pdfwait-b"></i></div>
+    </div>
+  </div>
+
+  <script>
+    const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAACPCAYAAAAiAQiuAABfTElEQVR42u2dd5xcVfn/38+5d2Z7OoFQAkiVKiJKk4CKAhYUXVT0K8XeBcUuIT8LKIpi/doQbCiLflWQjiQiAkqRFqrUhCSbttm+M/ee5/fHPTe5GWZ37+xOdmey93m95pXNlFuee875nKd9HqEGRUFAYeG5Er/XsXSptLP1SwfQvs8+CsAigEUKsUIyySSTTDLZWkQmD2AXCu1Lhc59hLlLdSPwLFqkGdgMo7OFC4WlS2VxZ6ccDTB3rtJxuQXJADqTTDLJJAPgYcCjvd3QuY9wNFYWLbIjff+Z9vam6cXG5qDfa7Zimj2RhlA0H1pyIuoJeGLEhKF6ImIAMKEBECsmVBXPGBFVmWwFqzE2DEM8EVWj0X1bz3oiqhpYjGcVQrVqPbxAvWLRs1LwDIPdYXFAbWP/oGnu2/Pa7w2NdJ7L29u99s5O6Zg7V9s7OmwGyJlkkkkmUxSAY9DtAE7u6Ag3+2zBqY1d03LzCjbYU63O99TMV9gZ0XkKswWZptAsaLNCsycmlxcD4my9yTbhq6ej571jFQrWouiQKgOg/SB9gm4AWQO6wog8GYp91uA9LZJ7dHbzutXS0VHY7Ejt7R4AGRhnkkkmmUwNANaFCw1Ll4okQLf7de+bUwgLBylyhMBBoeqBIrJt3niNzZ6/EXgsilUlVN34t1V16KFWdUo8ERFEBMETMCIYBM+9axCMCKD0BgGh2j6rLDfCvajeZZFbTV7u3eYvF/fEh7x5wQL/6CWLQ0EyIM4kk0wy2doAWFGh/WQTA++TC06dMa3FHA9yEnBE3njz8sagCoM2JFBLqFaB0KUYuWtxbmOJ7F13kcLUi/m65CtVVRBk0/5DVAVBwfNFxBdDg+chCgM2ILD6lEEWI3rFzJaeG2LrWNvbvcwiziSTTDLZigBY29u9GHhXHfeu3XLGfx9wSpPn7wgwGIYUbGhFxKoiiAqITEVg3SJAraqbdItpMJ40Go9ALUUNH/KQS/oKQ5fMu+HXnRDFi0vDAplkkkkmmdQRAMeZubJokV35indvm2vQzxjkPS25XFtfWKQQ2tCdxWRgO6GwbFVFQaXR802T59MTFFaJykVPeKsueslVV/Vr++WedJycgXAmmWSSSb0BsLLQCFE2c+dxZ7wtb+Trzb4/v7tYJMQGgCdIBrqTDcWqVkHzxvNa/Rx9QeG+QO2Z21xzyd8UlayEKZNMMslkcsSM2eXMIvufY9/Zsua403/SlvMvQ2T++uJQEKIqiJ+Bb43ssESMEfGKGuq6wmDoG++AnPFuWHP86V9ysQDVhQtNpqlMMskkkxq3gG9esMA/ZsmSYMVrTt2lwfMua/Xzh64vDIWgsrEmN5OaFatqRURm5RqkJyhcsaqLM174z4t7srhwJplkkkkNA3CcbLXs2FNf1Jr3/6/BeLt0B4VAED9TJXWWYa3hzFyj3xsW7yhq8MZtr750ZTKZLpNMMskkE2rDBX3zggW+dHSEz7361INb8v71nphdNhQLYQa+dbnrEkH8dcXBoNl4L8vh3bjs1aftJB0dYeaOziSTTDKpIQC+vL3dO2bJkmDl8aft3+z7V3uYbfqCIDQiXqbCen744m8oFoImL7dvs2/++txxp28jixbZDIQzySSTTGoAgHXhQnNyR0f4zCvetUNOzJ89Y+b2h0FohAx8t44kLb+7OBQ0+7n98yJ/0AWnNm5qmJFJJplkksmkALCCdCxdKtrenm9qML9r9vxd+8NikIHv1gfCG4pDxem5/MtXNZr/lUWLLO3thgyEM8kkk0wmB4AXL1jgndzREa7saf7GjFzjkRuyhKutmYI6t744FMzM509d/fr3fVA6OsLLIxDOJJNMMslkIrOg44zYzuNOO6HZz/11wAaBKhn4bt2ivu+HxQ3dPbJsxcvmPvH3xxVEwGaqySSTTDKZAAtYQejYR1e/4Yw2EfluqIq1mllDW/NAEEGMhEOdazc0dHbNLOby342GwsJMOZlkkkkmE+aCbm83wiIbDtmPT8817DYQBuFWR7IhAsaA514m5Sv5fYkKeuq9KNgYg7V2sPhc5wDrNswYxIZtnn/c6r1e9QZhkd3YWziTTDLJJJMt54JeuHChWbRokT533Olz8iIPGpE5RbX13RIwBkqJAIcwREMLQQBBmPgOCUBNfH9jc0AFdS9jwPcR39sEyMqmz+vl4XsGOzDUb1etCaUQtOEZrNqwRXzTp8Hd87YtHnrukiX23KhPpGZTJpNMMsmkOvK8mO7RixebRRB4Yk+flmvaZl1hqD5LjkTAOMgoFtFigBYDxPeRlkb8WTPwtp2DmTMTM3sG3qwZmGlt0NKENOQh54MYCMPo9/2DaG8/tqubcO167Nr12M61BKvXob396EBfBMI5H8nnIlBWwNqaBV81Rm13b492rssbpdkagainoddrQ9ti/INXdMqxi+Cao1ngw5IgmzKZZJJJJlvAAt5Y+9m+MNfZ8/S9TX5ur4GwqEKduJ9jS1cVLRRgqAiewZszC3/XHcntvRv+bjvj77ojMmcm0tw0vvMFAba7F122kuKTywgeepziY08RLF+F9g+A5yGNefA9sLVhGSvgiWAhCNd19bN2Q6PxTN4+73saTjM5r9sGf9r+4RvepAsxsihLxpqgDlaRL0Yk03f2XGv1XgxRA4DMK1Y1AHaZzyuPO/WVzX7uxoEwsHUBvrG1WwzQgUHwffz525N/8b40vGR//D12RebMLP9bazc5ViUlgkF0vnLx32JA+PQyCnc9QOHO+yk+9F9sdy/kc0hjw6ZzTla81zPYIBwKO9cO0tvfZjzP2DKeZQX1RCS02hvmCy/c6f4ly1xGtNbYIjDW0IjNFo+qPQfP1ZNnPOKZ7jNhHC7oKDPLe1OD8RkIQzvWloUTafHq0BAMFfG2mUX+FYfTePSh5A7cGxryyZEaWaExeCYTscY++jf9qw4Kcj7e7rvQtPsuNL31ddinlzN0610MLrmD4uNPgdXI8haZcCA2vsEOFnrDlWuQQnE6vocdxioXkMDacIafa91QlBOAnyxesMBjSe24obc2C1FVRURUVacBOwGPiEhQB0Qu2eKf7rluB0wTkUfrXfequgfQJyLPxfeXPenxWcACqLa35zt7W+5r8vy9BoLA1mT2s7N4dbAAhSL+C3ai6fgFNBxzGGabWZu+F9pNiVUTla2cTMTyEqorFin+6z4G/vo3hu58AC0UkZaJAWIX77W2p69PO9d6Rmm2kmqShdO8nOm2xT9v//CNb1LaPWHyuyWpRsa5qn4EeBMwCM/LU+h277WyudVugTzwDRG5Pj5WrVgz7r7eBPwa2FlE1tTqApcAlqMdGCzOFuOyevJFJFDV84CTRGSvpP7GqfsjgUYRuXEidJ84733A30XkI7U0h+rWAtaFC0UWLdJVPU17543ZbTAMtSbB1zNQDLA9g+R224nmNx1H46uPhFL3rsjmADiRWxqRTXub2PLO5cgdcTC5Iw4muO9h+i+/msHb7o5+0ty4xWLEEmV3B3ZNV6+u39BijOTSgK/7sRnUUFQ59MkDF8yQezu6asQNHZ9/HfA4EJZ4aizwHmAl8GeggU1kItaN+76SY1Fj5YENdUAFapzuz3H/X5x4L5Py622+yrr/NDAXuHGCdV8AsqTMagHw4sWLDWAN3iFNXs7vLhZCqaXsZ2fF2u4+/FnTaT31JBpPPHZTIlVoI9eyMbVnrXuyaXMggn/A3kw7YG+abruHvl/+kcKDj0XWsOdVzxpW8DxDGIaDdtXagvb2txnf82wFIC8gBVVtNN52OqQvBG6DhQKLtBZczyLyW+C3w+zUDwduF5GP1pobewRLxSaAbAHQ5a5RUyT3UKn1U0WLqasGk53YEtbgGI8dg+IPgN8nxl41nuuGSkG9Ss9dym0Qt6Tut8ax4pfR6stMZDXVjgKNQYMABodofuVhtLz7ZMwO2yVAzUyOtTuG+0gCce6wg5jxkv0Z6Liavt/+Bds/gLQ0R6VP450dviEcGOoPo/reaTJCvHfE4yhhozF+EXkpcBsLFhuW1EY2dEkSVvJfdRZks6r6zhUdJize+LthikXwedme7r2N4O0SYcQldtlyGa/uNyZ5zlLXXfy+iKwFbi13LSXH90rO6blrtaPcjxGRwLkS4+OEif+blC5Fcef0E+c3Gq3wtpwO4+PHH4mIrSSjtlT3pfdVqt+R4qQjXJct87xLj20Sz1xH2eTFz/Up4KnRxljpdQ9zz0nd++5vr1T3o9yDnxw/41luSsdeCt17aXRXRjepM8mH+27iWetI83OkYyW+b0vGerljP2+ulgKwHLNkSaAgq4V9gygzWGrCAeZ5aF8/pq2Vtk+cQcNxR9W2xVspEOd8mk55A/lDDqDnokso3PcwMq11zIQeEh1fw+7eHjrX5YzSFtf3jtXXa0SwVg4EYO5creUkrESMSt0kCFSVsSYzlTtHycQqu8i4SVwKtHY8CTTJye/+DsodbzgLp9x1uO8FJccNU15P/LtC4vzhSPpy5wtLnpcd5zMfUb/DAfxI11Vm07OZ7ksX3fFYUKXXUTouyjz3Ut0Xh9P9KPoJym0Ex2DllbvmsPSaxzL2S38bz6s0Ok/OwTLPs5yO7XDXXDKfNxsTZcZBWOa3Qbljm2QQbM0bzmgVZbeChiA1kP3seeiGHvJ77crMi86JwDeZ4CT1S861EYg12kx4e+zCjAu/QMubj0N7+6J7rOD+YqBUkSBcu75HV6xpFGiyMl6QUylETGh7AUhHR1ivvYJjwFTVaar6G1V9cdLCKPM9UdVfqOor3f9z7t+zVfUDbrFUVT1OVX+vqucnjtGuql9xkzJU1T1U9XuqereqPqWq96rqpxLnkfg6VPUlqnqxqrYljredqv5cVec7q7FBVT+mqjer6hOq+l9V/aWq7pKw6EoXnlBVd1fV77vzP6Wqd6nq11V1rjvugap6aeJeZTgrVFXfq6pXAocBR6rq/6nqNar63RI9nqeqJyWsmLeq6h9V9aPANFW9XFUPSOpguHIbVT1FVb+V0Ft8Xzuq6gWqervTx4Oq+gdVPdYBZjmdXKiqx8Wfqeq7VPVPqvr+RPKUVdX5qvpdVf03cK+qLnX3+QF3fi2npzLX/lZV/WaJbox7Hkcl9PN2Vb1aVR9zz+hqVT3MXUvsbXiX0/0xwEvcdV+jqv+beD6SSOzbXVV/kBh/96nqj1V1H/f5WOa0F28YVPWjqrpEVZ901/0HVT3SXXOp3ptV9Veq+rKkfkrnn/v7Z6r6msT/v6aqZzmdm1Hm+Q6qepmq7lLyPI2qvkdVr1PVR1X1cVX9m6p+XFXzCa9M8tmdrKpfjjeMbo7+3M25fAy0quqp6kdU9UZVfcCNlVtV9VuqulOpPozjnxSAIGRnhTmB1ZpIttIN3TS+4jBmXPhFvF12cFnNWwH/cqnJ6pnIGs7naPn4aUw784yopjkM01n4Cp4xaGiHwhWr+3Tdhlbjeflq+IkVMUVVVNltxQHHtmwlWm8ETgF2ZuQKcAFOA15Ywp1+AnCkm5hXAn8B5gNrE4vCS4kyXlVVvwDcDuwG/Ar4CnAfcIGqXuQW3mRMbVfgdHedsUwHznDuvpcA9wPvjeLyfBn4DfAG4HpVnV26yLuJfwbwMPBq4A9EnTZ+DxwB3OOO2wC8K2X54bPAnURxyC7g38C/gKUl33srsI+qtqjqbcAvgNlAL1G2+ouAcxN6KCfWLYbnJ2yGnLuv04CHgEPcsT8MfAFYA/zObbYaymwo3gnsoqozgbuJYrTTgC6ns8At/vcD2wHfBD4InOWe54eBu1T1BeU2cmWqTV7qdFEqpwHzVHWuqt4CfA14wt3rD4HdgSWqepDTgwGWO32vdzqMdX9/0hXqwPGD7pm8HPg/4FyiLPuDgPtV9fMJ8Ei7uHpAr6q2qeqtwPuBm9yxf05URneLql6QOHasnwan+xekYGA4A9g/8f/VwLfcMxtu4xMD+vuBVwIr3UYkUNXd3Jj9EnAHcCbwUeAG4APAfap6UAKE4+O/LDGfv+We/8FEiaAx8E8DbnHj4kp33A8BlwB7Ol2fnhwrkQt66dKIFji08xs93xsIJ7n8yBh0Qw/NJ72G1k+cscld623FDZmM2WjdN554LGb2TLrP+yFaLEIuN2JylvE97OBQb7hyNVIIpuONLd47nIRqQXRGUGR74LFaSMSqQhZ1wb1Gkw3AUMl7PQ5sfwbMAvYVkccSVrIlKo1apqrnuoXgOBH5d+IYP1PVh4Cvqup3ReS/7rehu66uEveZAsuAoxxQ/D8R+WbJzv8S4L/Ah0Tky6rqO19dqKpvdgvjl0XknJL7+Yb7/GIHyCtHAuCEG/Ra4FpV3c/9/2vD/GStc8F1AJ3AC0RkZeK6Pw5cpao7AM+VuunieCFwNDDHARMiUlDVdzrQPU1ELi0575+cV2IJ8H8icoKzfmK34Gog5zZQDwKvcvH32HpscRubi8ro7Fpgkap+DpglIk+kAK/+MglrBljh7muxA4VXikghcf/fAZ4Evhrfg4jcBNzkwH+uiHx1GI/HR4DvAWeJyLfLPPdTgUtUtUlEvhS760mXBT0XuAJYLCJfKPn8fAc2F6tqQUS+EMec3fEHUs6/de67MWh9D/g88G4R+aYbG2GJ9Ru6c53h5smg2wDMdRvWfwCHiUhyXl8DnKeq3wduVdUXRWvdxnkwCDztnveJwJEicnuJBX8esC2wR4kLezHwU1V9PbBT0mMSHbxzH4lSMGXHRs8HmcQkG8+g3T20tJ8QgW+y+cHWLjExSBiSP/IlTP9/Z4LvRyBcxuoXQIyxYU9vj1220phi2KpG0CqCr4CEoHkxDb61O0bvLpWtpAJAUu70pUzW7zuBZhE5QkQecxPcSyxePc41ezLwMhH5twNET1Vz7rvfdRP7+BILW8rUNSvQ5Cyij7nFxySOmReRJ5yFc1LiN9ZZxJcCvxCRc0p+5znX3B+cRX1OmXMP51rNuYWuAWiIr6PUpegstLOJiEVOFJGViXMLcB3wDPDx4axg9/6ZwLVxbbSqznObio+KyKUl9+Spak5EnnSW8StV9UNuYTSJZ3SuA5B3ishad4ycO98hQIvzVPjufk2sM3dd54nInSkz6k0Z3YoD5m8CV4vI6W5jEd9LgwPjC4FjVHWas85iPTcA+aTuEx6PvR1gfVpEvh1fd1JHbtNyGvBFVX2Z+52XcmN6OnC9A9dyY+oXwCeAz6vqi0ryMCqZfybh8QiAHwFnOtdvqYs76aWa4TZQccz5J8AyETlJRIZKr9fp7SPA9Wyqrojncy9wKHAccIiI3B7fc8KF/wbgG25uNJaMRU9ErhSRHybHSnSxc5dGWXrYndJzMm4pt3Mvza99BS0fPXUTc9XW5HJOGfsmDMkdvD8zzv14VMvrMqc3q+81EoRru7rtitWNQjpyjTHai2GT8UG8bQFY0DnFHkjZRaEF+FgyiaUksSQgIgH5mIg84wAycN8ruozIXuBR4MCUFsds4C8icomzljU+ZmIhusW5VXOJLNP/cQv1pxIZtfG1hM41lxORO4Bvu4UrTEnnGcT0M3EiUJkEmyZ3/WfHAJbQl+cWowuAD6hqSzImmbDkdgBe5dyPcbLLJ5xF/cPYxVzGbd0kIqucu/2LCQ8Fzt281ll+MXAFic8b3Rop7v1kvXkYx1jHGD9NlijNAJ4SkU8lr8PpJ3DHv8M9wx0SGeThMLqPr+dLwJMickEi4zlI6N66536py7r/RgW18dOAf4jIt9yxteTYoQOni1zm99lVmHfxGP+es75PLNNWVxNj4woRWe/G0d7u+x93YNtQxsPku3v5sHPPH+3majyfZwJni8h6p7dkMpe48RK/Xyw5ti1xw5frB2y2sxGtokwK+Pb203DI/rR+8t0uCWkKgm8pCB9yANPPfh86VEioyqBWB8PnVvfr2q4243k5OwGMC9bqdrE/ZYpLK3Czs8SGyyBtBZY7hiJTMiHj0g1xLrZtUsTCPHeMn7rjlZZwxAvPSnfufOLztwA3iMi6EUo44pjXPW5RqebEa3aLYeDOH24W4Yj08Eu3UL2jZG0yiXjef0UkWZ71FuBil2Q1VLKpiF8D7rs/ckB3UEIveeB3m/a0Ykvqse904YcOVd3DnSc+hybKTXSc4ZCcc6NT5vlowl0uQNtIYyWR9JdzVuDPhqs7TmYUO+vwcFWdVS5xqozkgNsTWdDljh3LxcDxsddgPPztLq692lmoZ5fLTnZx3iOAixL3cTLwrIjc4p7hUJmxUnCfLXfx7FMS525xm6R/uWMGycQr98yucd6S49z8jI9rh8vqjhSyzz6RssRuq5NR/iuCDhXw585h2uc+BL4fWb9mihtaDoTzrzyc1mUr6fnpZfizZxL2D/YHK1eHZhz1vRVTWaKIYR7A0TVUijSJMjTKIiUuSUWGW9Dc5LUpLQ5xC1BhFDdhmDye+96ewI/jWsaRYrvDWJLViLkXR9CBJyK9qvpz4DOq+tOEtRODyRlEyWbxfU13VtAeLrksV1oWUlIXHlvi+xMlK228rmGuSdwG6xhncd2tqo87D8MNwG0ismakUpuKphcMxmA2AviksU7jY+zoNhy3jfK7OEP8AbfJe4HbFMoo51Kgwf12NMa6e531uL0LNUgVqhkuIEpqeinw75L58BHgXhG5x42dIrC3q1E/w+GejrDRHSSKyc8s0etQosxRyljmH3au6t8BPar6T2ev3OhyRMLS8il/8ydntrGTUWMiUSlO25lnRF2LrJ0aMd+0pVhBSPOpJ2FXdmrvH67vkb7+nBfacdX3VrZ6qkRVtcwGl0qzdYhW0i3s+ev0iIsPbreuW7KDWYrvec7S60lxvVuSmnMkfcUL2oXOdXis4+nOu8XzBGdF/zaxADa4zcZhRBm3+VGu3QI3A8+l0WcChO9yluGBRCU/r3TWdF5V7yDK3r6rCuxSJuXzqcTrAJuSvjRFiIPRLOwxjpVCYgOU+vfDbNhCt+F5QFWXAJ8VkZMSm7Um4O3AJ0vuQx2gnu42a4wSFugD/lnyXMs+48R7PcCHVPXLRMmSxxFlzZ+vqs+4ZL6fJRmyfEBk0SKrIKvRVouiqEwYC4dn0O5emk88ltyhL4pKjbwMfDcOwtAivhcNimIwaFeubvTbWvJWJnaD5JIEZm8l+CuJcogRO82oal1vLlxCz3PALjXcTck6K3iZql4BfI4oESaus47jeT3OjRk4l2wB+F8R+foWui5NkHjc6yy577hF/hC3yP9LVU8UkavG2ZRAq7ypXO70tLuq/mekUjsHCHPdd56u5HpGc1W7z7dzoNZZ8nFDCv2PdM1fIcrC34kouUpdIxMB/lDiUVgNPCciL6+0kUZazutE6dcKomqC37v3dyPKw/iJqh4uImfE48rEV/fsoe2NIE12IhccESgU8ebOoeW0t7hs56me35ME3xDxDHR1F7vO+Fx/z49+2+S1teTtJPQTdjGKGVuJatcTlTbsOMwCYlyCze6JBKJ6lpuB146ysErCRS2Tw5OiQlTKcbSq7usSkPYiqsH8TrygOqBTolrMkxIZ2TLMy0sLGMP02tVE9rMnIgMi8ncROZGo2cf5tdTYw1ltXUS10a8bpb46tupOct6BZ0ZxhW/mt0x57LcBD7rkJSHKiu9PMf/mE+UzFMqxaInIjUTNWD6WsEI/DvxSRAbj1BX3/g1uM/KCRNZzNcdKsu5aSjLl/ysi5wKvA0535CdWVWMqJjDbzW1WaFaUCSOhNIIODNFy8vHIrOlR3FcyAEYVQot4HsFDjw+sOelDQf/1f281M6cbnQTwjWPAsVurnQ5bn1VeG92KRaLaywPdxPWSzEEJt9L5JTzS9So/AOar6rvcApEvs+jEiTTvGAOQxMk8MRe0l7KUpbS2WETkHgesn3PX8zHgbhFZyvMTuL4JvNSxRBVj12LSZZhYFI9S1TmjsVaVLvSJeLvGSTVOZ40uvni1sx4nqz/1Zrp3r9jFehHwLlXdMc50L3nuOff+NkQkFN9ziXJeCnf6EFFoAHeMUkDLu/cPAl4DfCfBnhW4mvYDkwCeGIsxcJ9HFCYNRiDbuAB4vxtz+xLF+H+UzBR3z/sGd84vujG0kWQjca9xSdHeqnrgKJuL560tsXs8wREeuHvyXThlsdtMbBv/zJzLuQLQYAcaBG2wOkFlSCLoUBF//jwajj8ms37ZGM6P9O8ZHbzypoG1b/4wwVPLmryZ00TDcLJ8mfHK0uSektYBHeVISRY4IoU3uzKVQnISuYn0IzdRHkkRMxqPW1EreF8rPa+z2Ja6hepSVT3CZXtq4hXf8zlE5RddaWuBE7kkflxiVaYkSysMDZwHvNG5Fl+fyGaVkjjg34HLgCtVdXZ8X4lF3LrvvpuIjGO7MnFBRqDaPF1VD4mznksAYtCB/olE7GIjMWFV/bmW6D5XovuCu5ZLiBLObnD1w8WS5150ZCPXEZFOxF6GNAtNH7Ctql7iNrVBybELqrojUWbwrcAvSzY+1wAnqmpbXOqTGIuBql5EFDZ5iPLdnmJg/Y0D6BOJavP/6UhRkolx4ub4e50F+lY3VmzcSCKhj3lErGInlytxGmGsvFhVT4t5whPhi7jBQ4EofyBPxHIGoObchdFfgZoGkAY7UV4UIzA4ROOrX460NlfMfby1xnsxAoLt+9bPetd/eGGO0DbR1IgG4STvCxRRGp899NAG6qdWV0aoJfy2s+ivcTy5xlElHqWqfyeimnyTm0D7lTAEpXHTSkoQM2WONdxvvbTkpiWuXY+IPegK4B+qeq7jThbHy3uUS2h5IVF/2WnDZBQPB5iPAq9R1WNVdZ6qnqCqH0jxLMrF3MVZlY8BVxGxaP2lDIF/vMC9l4jWc6mqvsVtqGLLdQdV/QbwU+AMl7jjJRbm0a7rQKevRY7HVxPH3sZREp7gdMY4xoSX0uop951Hncv+tU73r1bVDycSz+Ja2aWOi3qWU94MVX0jEXXlLOD1zm2bNplsttvUFYloTN/oMtNxunkf8ABR7PWkxHgKE7W8BrhOVfdy869ZVY9U1ZuJ6FLf5H63X+nmJvZcuWv+rjveO4Fvlmb7x+5ex9x2JnCZ4z/fNrFJa1XVt7syvL8B58TlfqPNZ3e+GcD3VfVaVT085pR2Y7bBxaZ/B1woIk/H43BjFrQ/VGywnjSMr6a8gn1uEGJmtNH4qiOYVPKPmor3etDTW1h/1tfCgav+1uzNmuGpavV6BI/jgUUzUvODa2bkcNRwNS5Dw5SYxJPxCbcAXex22U+5CdZAxCZ1togMqOp1bmKf44gzKHfcMhKUobBkmAzRYpkszMEy1s9gCmup9LeaSMhqd9SEn3cL0XJ3zzngVyKyUFVPce9pKpbSaMH4JlGc9noihiQDXJJYyIcqaN4eczBf6GqDP+1YizYLBcQJOiLS55plfMYtxF9T1bXuHnZy1sZRIvKPmNSjZIwEw4wREZFPqOoNRIQW71fVZe5ZGcf9vRx4uWNFkhQJWMONiTT6ielTtWQj+V23WbzK6d4HfpMY5ytdqc5X3UZkQFXXO8BoI+KE/mwcn63AjV50lt17VfWzDgBR1V7nkm8B/hf4kkuek2QrR0dO80ZnpT9IRLVpXM7FX4hi131u/p0OfEFEukqykmMdfN89/yecq5lyHaUc6H1HVe8BvgWcpqpPu3G1jdPdN2OK15JYeNlnlxgrf3NkH18lylPtUtUN7muznK7PccQlcUkhogsXGlm0yK571Wn7h3m5b0JysExEutF4xIuZ9tVPTXnrV0OLeIbgof8OdX10UVB8+IkWM7Nt0q3exMzXvIgUrF1hRfff8eGb1ronpjXc+Wgb16atazg3o5s8LcDhRHWTy4E7RGRDSWvDbRxjUtyubJabfOtGOH8b0CQinaNc52wXL1qfOF+jWyA7S/qrznXXURjheE3utytLeqiaRM1nzrmad3QWyl0i0u++9w63UM9wwDeiRVSysB7iNjAPxgxEiWcxJCLdKROfLBHJxq+BXURkxQgtFpPnbyQqS9qdqB7zHhF5eLiWe44beEBEekYaI4lM1v2cG3sDsFRE7qukDtiNiUZHJJF8f1ugV0T6RsnG3QZYE7tsS+79YAd6DyTHZck9zCRqCLE9sMo991VjqWVW1TluQ9CTKAs7MrExuSvJq1367BJjvcnNv/lESWD/SrBXlZ1/ZY7RTJTTcY6IXOQYuIJRWjOiqgc4L0fehZpuH+F3I87nEj1Pd/NrV2dZPg78223oN9OFXN7e7p3c0REuf81pL27yvbuK1qpsaXPUGLSnl2mffA+Nb3jV1C090k1Um0PXLOnr+vT5Oe3tz0tLM5MV7x0OgF22xhrxG/fb7oErV9U6AKdcRMxw/WXTNAuvw/v1ErSKpZ81uh3+p4DPOoL/ME196zAL7JjIKRIbozuJmIveNNqxkhmoaZuyV6izYcfCOEk4qpXxPKLuR9HPuMf6cOVXY9Vd2muKgda5u38AbOf4vEfbNA77zMbZG9mUSRQc8dh+u/sjn8PzEYrOr7NFR421mJZmcgfsXZYQcypZvUDY++2fF3q+fUnONDXkaWmqKfAtyT7wvOKAB3Du6Ew5NdH7d6SJmGCoMgnmH1vGUtpsQqc5dprvjPS9kayGtMdLgNmRwGtF5HPJvsYl5SKD7rP3AX914JtqMUpkFksiA9SOQRc551Y8gKjV28dGY+9KHDcs8yzVXYeOY4yEycU1eezE8cc1JisZK+UoH0fS/TD6SbJgheOdX4nYfUXHHuv8S26s3H/PdG73tWnGbOK8UpKQpyOAZ6r1pOTaRj32xhiwWDFiZOJoJ3fdEW/7badk/DeO99oNvUHPZ78+0PfnG1u8mdONuvKjGr5ybygwHnVSclTB98JKjpXm2BWeP9X7YzhvvDivImLoaSJqS1ccZoH5rXNPfj5lLejzeIXHqYvYtfo55xK8rVw8bzzPcizXVa0So0qe9Rh+r9XWzxjmRDjG44SV3rd7r6iqLyeimXxbJRnlaXU2xrGS+tj+pLTcKwZ4O82DfG7K0U7G4Bs8+uRg10cXUnjg8VZv9gyplXjvSN5yUTzPl9gCZhGZ1EHds3HtEl9GlF18vKr+jqjWdhlRXPkw4FSi+O0xjpFqQl2rDvAPIsoqfhtR1rKWJl9lwhSnSNgY993eUYN+B7hFRO6d7HAAY+yJCkBgrTSYiSIBVHLzd5iS8V7xPB289u9DG84+H+3ta/RmTafWwTfRlsWTMHCjZGEGwfUBwnE27MOOqOAjROUdbydK2uklogj8MRGtY+8kgG/sKv8IUa3kF3F1o+Ogdsxk6xTjNmQHO/D9B/CJSj02NQfATDDZhMzbpobI2ybCfBQA2/f9X/V3X/CTRtPQ4NPSVD/gi6KqnskFGVF3/YLwAFHtZtwfthnoTyZlTYYVkTjfR4HBDHQzGS0mT0QesstImeN1BcD+RGbz+B5mxrSpY/mKQP9A2PXJrxX7Lruyyd9pe0/V1ni8t0z1v4hXDBu9bBmoWxCWRA/bgIiTlxL6PDuJ19g33kzUTKbMeC4AhUSzDK1rAJ44QLJIPodpbpoa+Vci2A09GqxcY/JHHtJoV69j6N/3QT6PNOQhrIt1xpGiihg/a1VVzzFhXDw1SQtYK3GzRKZpBr6ZpI0HW7YGCzhQKw0TRSxsDJLPTYlBYteuJ1zdJWIgf/Sh5A97MUPXLaHv0j8SLl+FtLU420PrIfgiodqMsHvrAePsmjLJxvAkB7Qnl4Riq9uWbap1Dpav0rBzncvyFrSnFy0WaTjx1cz40ZdpeuOx6MAQOlQEL/PsZpJJJplVG7+YIhllk6HkGuA33lLxXtChAsHTz6E9fYKfoNU1JqqD3tCNTGuj7bMfZPpXz8KbOxvt7onYwLJ2jJlkksnUA14v0ZVIExSb3tYMxgkAzk1cHXAQYocKW5/lK4L29hE8swIdKkRWbTlD3/MgCLDdveQXHMqMHyyi8RWHoxt6s65QmWSSyVQDX5Noidmsqts6jnQSrSDNVg3AMlGxPSNosYjtG9i6ypAEwjXrCZatikDUMyO72UXAM2h3T2QNf/ksWj/0TigGaBDULDmJTBHXUCaZZDJxiVSq+gpHEHMPsBR4QFVvV9UvqOr0uJRua7t/f7Jctbq+e+spMQot4ao12O7eTcCZdmPheRtBt+m0t+DtuhM9X/sBtn8AaWyomVIlhcg/FBazYHUmmUxxizU9d4+MxMMdg++FRHzOpbIdUZvLt6vqySKytB7ZrmovCUsE7VxT32VIscu5UCR4dgV2Q+/YE6mMRMfq2kD+qJcy/Vufx5s9Ex0YnJpdojLJJBNquaY85UtH6ftsVfV8B76he9lEswtL1Hd4X+BaVd3R8ZubzAIeJ3AVl62iqc5dzra3j3DFmiihzDfjz+z2PLSrG/+FezD9gs/R/dlvEKxcjTQ11kbSmkAxn98q3F4l3UoYpoF9VhaTSSabczDPIGr91xiv5mW+HhIlFXWIyG/LtEc0Lt57IHA2UbN7r8yxYuKYIrAT8GUROT0D4PEisOdhV3ZGJBR1Wn5j13YRrlm/KZ5braXa99DuXrxd5zPtvLPZ8MmvEW7oRvL5yQXh2N2ey9Ur4JpEm7RU3Uri/rmTzRCVSSY1JI3AKSm/+wRRhy0p43m1RE034r9lFJxS4E2qeraIrEnTmjMD4OF4oPM5ghWd2LVdmLmz6yPzN97rWSVYuRrd0LPlNg85H+3pxdttZ6ad81G6zj4/2qwYs/XWT2+5WFVM6B8m3p8DzATmANPcbr0ADAKrgS6gM8nIlABxm1nGmUzlaUVEYdoyggUcOGzpH4UtYV/Ss+EqMB3YDViTaMqQAXDF4hlsdy/hE8/WBwC769NCgfC51ejg0JYDXwWxFvU9wsFB9NgjaDzrdAa/8gOY3gZhtvanTRJJNMieCxwFvAo4EHgBsM0Iu+4NwFOq+ghwM7BERB5K0DiazCLOZAqL5146QhjHS5FjlBtDQ/gGsixoqtITuPDAI+QOfVFtlyLFyVZ9/QQrVkPg3ObVtkRVEQXrG8LGBoKmBmzeR4sFvHe/hfwDjzL0pxuQ6dPqhT960gr6Y8tVVQ8D3ge8zlm7w+3EkwuJuJ32ge51MjCoqn8HfgL80SWPZA0DMslkfP1dlidzLlL8JnC/2WoKWM2kWZT5HMV7H9pUM1vL9b3rugieXRWVBFXZDSyOA9o25CjMbGVozgwKM1qx+dwma7hQJPf5D+C9YD4MDEZZ05kMC76quqerKbwVOM2Bb5h4aWJSx67lZFJWnIEZf78ReDVwBXCLqh7lzmM0q4vOJJOxEvZek9L6Ddxv7ibyTEkGwIwzDtyQo/jfZwifWr6RO7mmXM6AWku4YjW2c93GUqHqWbuKGiFobWRo9jSGZk+n2NKIGokaM2iCvnKogG47h4az31M3LQwngT82Bt/3Av8C3loyeb3Ea7QHGYNy0tUWg/ERwGJVXRSXWmQgnEkmlfX0dWGiq4A7iTyxhWFANUxsjv+f8zqZrSUPY/JMT89De/op3HZ3bTkUYpdzMSB8diW2q7tqFvpGazefozCj1NrVjZ+XJevo7sUc93Jyxx2FdvfVLFPWZI1jN6m/SuQmnu6AV9zkHi9ASgKMY7fzOap6uao2lLb3yySTTFIB8RDwTuApIO/mWamnKp53XxSRv8YlTBkRRxWsYPI+g3//FwRB7bhVBWxff9RMYWAQfG98mwMHrJtZu3OGsXZHbaWs5N//Nsy0VhcHztb8hOW7EPh8wuL1t2ACCkS1ie3AZW4eZe7oTDKpgMzDgekjwMuBS4mqD0o9VfcAbxGRr7q5brMkrGq5YRsbKD72FMV7HyZ38H6RG3qSLTu7bgPh6nUbs7XHCr5iFRXB5nOETQ2EjXnUd8dzCVeVbZUM9PXDgXuRO/4ohn73V2TG1E7ISoDvG4FzRyjoL+fnsCNsStO4qHMOhN8EnCcin3Z1w1liViaZVAbCy4DTHNPVAUQ5G4POMr4z8b0w44KuNiVlGDJw1U0RAE9GKVKc/6pKsHIN2tWzyeWs48hkbo4zmXOoOPez1fHrKwjx33oCxatuRsNwU4Xc1Cw1sqo6C/i+00Ia8AwTO+zRvpNm/gTA2ap6lYj8PcuOziSTikE45oVeBiwbqbIhA+CqmpsW09zE0G33ED76JN6eu06sFbyxvrdIuGL1mLmXN7N2mxsIG8Zp7Y5kBQ8MIgfsjf/SAygs+RfS2gJqp+jcFauqHwV2SBT/j7bd8pzlejtR15VV7r3tgRcChyQSr0arUUxmTp+nqkeNYFlXi8nrebOo3hNSRqAGVUYg9K+3c25JspnhKFXr4T5iZjp3L6bUU7UlwTcNLe2W1KE/6do3Bu0foO93VzHtnI9ObFxTBO0fiOp7i0FlLuctbe2OsGnRfA7vuKNg8R1TMgzsaOhCVW0F3p2wfkfUnPvOb53L+IFhjn0A8HHgjDI1wgwTE7bA4cBRInLzeHfsCcAVEQncAhCO8hvfLRbhKAvNuLrYjKEjDuXidu56vATNp46iD2+8lKCJBb6Sc2q1NjmVPIPh7jO5GXO9cm2Kc3q1SqdaRif2+R1Qo9yKal1/YhyEaWhpXWhpxM3uWDtETT4AW4u0NDP0938R/Och/Be9cMKs4LHEe6se2x2LFTw4hDn0RXhzZ2O7+1yi2JTyQ8c0dC8nImm3owBw/PmXReScESwHKyL3Ae9W1ZuAi0nH1hNz2b6TiDlrXMBbhjpze2A+EX1mi3u7H1gHPCMiz4lIUOYYz7Myquk6rAI9aHzNze45zgGa3XUOuPt7VkR6E98te38VnDNmR2tyOi09ZxewTEQ2xOeslht0vM8gcQ3JsbELsCMww91HAPQS0TU+JSLrSnQntQTE1R6XKYA03ojYBC3tzm4ctLjNygARG94y4OkSStqy42CsOvVr5CmgqvT+7HfM+M6XNpFdVDsmnIj3hqvWRiVGafr3Jq3dpgaC5gmydodjESsUkR22xdtvL8K//RNpa51qABwPjKMTCVVmlHjuHSJyTrybHcFSNIDnurjkgV+kIIuPwfxoVW0UkcFKyeKTi6uzZhcAb3AUmjs78C0n61X1KQf8fxSRW90xYss8dtUfAHwxUVc53EYiB3xfRJYMR7npjv11B2DDHS8+1u0i8q0SEIw3FW8AjgNeTEQN2lhyjEFgnaouBRYDV7oNUlhKN5qSGW0H4PXAa4CDhzlnwZ3zceAW4K8icqvzuIwJwBLJgqcQJe0VhxmvsSenFzhbRNYlLER1x/CIKFVPdGNkJ6BtGP2vUdWHgBuBvzjdaQKIdDJd525cvtuNgdF0sh44U0QGxkFNG4+DQ9w4eAWwpwPfcmO4F1imqrcAfwauF5FiyTNRR3X7TSKaTB1lbv1FRH4V339tALC1SHMThfseYeCKa2h62+sjwglPqr5sazEgXNGJ9g26FoI1bO2OoC8a8pgX74PceOtUdEPHmt9/hPhNqVyciB0HoySFqKr6InKJqr4DOMYtzN4I16NuMdwVeIgK0uMSC3QOOBX4CBENZrnNBCXu75nudRBwlqr+jcjFfqM7dtxoYkeisqk0cj2wpFSviU2FAd7iNgajSRvwLbepKbpM1085b8Hs4VpBunM3EsXmt3egs0hVrwMuFJGbRrJIEm7LUFV3B84iImeZNco580SN4LcDjgQ+p6q3Ad8WkY4YwCq0hmM9vtTpjRSJguc6D4AvIkV3T6c43R2UIqvfA+a61wJgoapeC3xLRBbXQHJTrJMjU+qkF/gMMFDJ5rZkA/Y613v4FSnmlgFagb3d673A/ap6gYj8yo2DuBKiDfiflPfdCfwqvv/aYXOwFmltovfSPxI+8kTkEq4WO1bMbNU/QPjMc2j/COCbrNttaWRojmOpam1EvcrqdreoxyAIMPvvCfncxFrgtRP/NcC2KdzD8Ri/e5gY03BusXgR/71bzPIlNYrJl+/+zRGVUaSaW47BKyYROcJZXD914KvOdZiMVZaeN7n4xvXPrwBuUNVfqOocESk4XRXdIlMsITtIvgru36EUj2LDKMeLj9XnnllRVU8lYj76uAPf0ibscXzTJDYwMSVoXGJ2AnCjql6mqjslrMJS6yp+hp8nqiX9oAPfNOfUxDkVOAy4XFWvVtXdy50zpfQn9FtOZ4H7d73L8DdOb/uq6vXAbxz42pKxIWXGRul9+ESc6Der6qWqOm8c91FN6RtFJ/H46qrUVZ3Y2O6hqn8BrkyAb1J/WkZ/UjK3rNvw/1JVr1fVfdyzidsp9pY8w9JXfH/9teeCjkHSeOjAEN3f+DEzLlqItDRVxxUtgu3qJly1dth476jWrq2ptEEoBshO8zCzpk/VOHCeTfHQUYMOblGraEvo3Eu3OffuaMlYYUkLNk2TfOIs7k8C5zkADxOg4Ke0JJJZ0vHvTwOOUNV3icjtbrfulXyXYZLKpIKOOCMdL3b3q6pe6KwPEmDqpby3ctSEbwOOUtV3JhPfEq7NOc7SOG4M56Tke7F1dDzwT3fO652XJKCy3AUvseAPN1495zGwqvpW4MdE7G5hyYZhLPdhgHcBr1DV00Xkxkm2hEfTSZIWdizgexIRO97sBOB6Y5xb8e+PBW5V1feJSIfbxIypQ5RfU0uqtUhzA8XHn6H3gp/Qdu7HN4HKWEFYIexcg11fJt7r3MjqG4I4tpvzUSOIau1algIEITJ7JrLNbHTdBiTnT8U4sKRchARorYSpKo7ziciDw7isRuW7TQm+FwEfS1gr47VIvATg7AFcp6qvAtZO0nMqqOq5DnyDCjYWae5ve+CvqvpmEbkmBkRVnQdc5yyWoIIFN805twGuVNW3isifthB4GaL47XucR4QtMDZ2BK5R1dNE5DdbU61tYhx8mIgjgJRlimmZIwOipLfLVfU0oviwqS8qymHtCItMa6X/b7fR9/1fbUrIqgRcYpdzMSBYtiIC30R9rzg3suZzFGa0MDhnBoWZjpN54+c1jj1hCK1NyDYzpyobVoEoWzFNPA3gCOeW9MbQ6MFU8EplPTrw/Y4D36CMtUIVSgxDYBrwF6I4oDJxGQPxvbwWWOisB6+Ka058f01uITzQLbptbkHc37kv/Sres+/uIw9cpqqHbyE3bjdRG82fJNygW2JseMCvVPUtNeKOrhY7XqCq73PgG2c8+1XWX2wNX+yeVffWAcAAYYiZ3kZfx9X0/eSyhOWq6WOkA4MEz6xA+wZcPLkktjt7OoOzp1Fsbaqd2G7FOGzw5s6Jrl2mDPuGJmjp1qZw98Yu6I+papuL2/iVnM91PUr70pQLxEeJYqHFCty+pYlDyddwIKhECUVfG0Pz82pI2ygsZWnuYySQD12yzG9c1voFRGQqRTaVkFXznCbRovK3jomtWh2x4mPEWbUyyjo9Xt3Fv7lUVQ9O5FbUOzXtK4EfJqoXzBiSPEfTq0n8+3VnEVc8v2pX2TayhPt+/Wf6vv/LTW7oFIlZtqub4NmVEASICFiwed91IJoeWbsN9WLtjjBEjMDMtqnmek6O28dSLD7Gfb4XcIWqznIAaFTVm8gGCokF4mCizOCwQgvNJro8lb5Kex2XbkC8SereUc7qTia2lN5HMvmsEiDZ11m+pyVKPkqvI6ziOQOiLPCvuHBFNdfShhHiiSPdh63wPuIEomai5KKWeu3s5TYOcUnQJQmPQaVzS8cwtxhhs1enAJwE4cuvpnvRRWh3b2QNh3Zz0In/dvW94YrVEbB6hqC5kcLsZCazqU9rd7hkrObmifEsikQ6KxZrqQzpH6SLBccLzauJkmhe66zV0FnU3pYG47iJuLPSfpSS4CO5ONiS+GkXEY3mmoQV7SUWjOEWiskqNylNBPITNa+d7tWdaCFpKmhsEd/fcQ68zDCJW7ELvB9Y7c65oeScNqWu4jrr96jqC7eA9agjJKDF99GX0F1viV7DCu4jAPYBPrcFNhMTSk0LnE8U3w5S3oeWzC1x43CVGyMDKeYW9UtFmQaEp7cxePMdhM+uoO0TZ+Dvv9emelhjInAIAoLlnWj/ANrYQLEpT9jYUJLJrFtfKWxDbuKWVoVcoVATo8L9e6ObLG0pdiHxorQXcJWrJ/05cKOIrC9DO6dVZgyKy43eReQiTZtUk/zeHURlUXcQdYrpJYpHzgP2IyJ5eD2Re9SWbE6kRjZNHvAk8DvgJuAJNmWoTwNeQEQ+8g4ikgRS7jBlGEKWOH66xunuauc5Wet02+Ys2cPdOQ9Mec54Mc4BHwKqzaMrw2RHrwT+APwVeDQRhpkJ7E6UofsWonp0UrDEJTcTn1DVi4EnhyNhqXHX86HOAxKmxDabCI08BHQQEb78123MDFHS3V5EuQxvJiLt0GrNKb8eFEwYItNaKD79HOvPPp+WNx9H89tfD63N0QPo7SdYvY7QCMHcmfWRybyl7AumTBzYE5GVqvpb4AMpsxy9BDC9xr2eU9W/AlcBt5SAcSln7HisX+voDz9TgcsiBt+HnHXy52G+twa4nygxaH/gHLcI6wQnXqWx5r4CfENEesp8rwt4BlisqhcAnwS+nLBwpUKPXrzA/pKoofuzlK9nXkZUVvJtooSaC9hET5mmxvxNqvo5EemtlAGtApCwRGGLb4nIqmF09yRRDfiX3abgi0Tx8dFAON68tBAxcH2wzmLBsb4/X8FYj+fWauBLwKUiMljme+vdRudKp9dPEeVuSMrNTR27oEuzoxsbwAi9v/kT6z74JQb/eB1BT58O9PYyOL2FwuzpdZTJXB3klcBO1NkkVEW9XFg7G181RMlF6xKZiWnGfDKusz0Ry82fgQdV9beqeoqq7ujc1EHSTT3Ga/Xcovw6Z6WkaR4RLxB/Jsrg/rPLyN7oLk+84ni2JyL3i0i725SEjK2xZrUXxzi+doqIfElEelTVd9dsytyHLyIDIvIV4OREbK6S+4hd3YtE5FQReXa0c7qN1g+JyD56RukbnQxt7AC8bAusqfECvwY4TkQ+LSKrUuiuR0S+TpT5/njiOkmRK3GKqu5QLwlZibrvfYnqtNNUOsRekf+4ufVjRx/rjaLX5SJypjvP2pR6TQfAKkbrwR2NZ5CmJoJlK3Sgqyvo15BiSxOa86PPp1pC0uDQhNo3WiPtzZx7TJxV8+4RuqmMRiSRTMCZB7ydiHHoPlW9UlVPV9XtXLw4prSrNF4c6+x/UgJJDL5/Bd4sIuvdAqDxdbi/NZGlHcaLpvvuj4kIF6SCuOaWAmAP+IKIXKaqOWclBnE3nzL3EbjFL+/oHz9b4WIX6++3InKuAywz2jlj6k4RWeI2ZaaCcMgRVfZJxdZ3lwPfGyrUXU5E7nZenuUp9CeJsrX2OjLQ4mt8a6K8Ks2m5mGn18cSeg1T6NUXkescCHeNd4ObUHCx9lXtedA3AM0NtuErZ6p/Rrvv2HunHvBGTk20p9eRlEyx+2cjz68nIn9yrkNTYfIOJQk4mrCMZzqL9WJnGf9KVV+daAOnaSyEBNXkdkTdmyRl56Yngf9J3GNQwcYkdAvwZUQMW96W6FNcgQV3L/At50EI0rho3XeK7jffdtaKl+LZJsn7Pxm7/9PEM92CW3SL7O+BayoYTwdU2dsQh0reKyJ3uedZTKs7dx85EXnCbfzCCkr23hjrrR58o+5aX59i06AJStC3xd6ECvUaOL3+23mZTJUAuNb3OQa6ezF7vcA2fOMzKi97kdH13dG9T8E4aJz1bdd2Vb9rVP2BsC8iP3X0hN2JhTocw7YmaRnHx5hF1DzgOlW9XVX/J+H68iog4p+RorNS/JszE5ZvOIYWb4G7tv/ndvtmEhbUeGH6sbuHiuKj7rtxduuPKrB+BbhCRFa65Dc7hvCGAN+rgGt8pwRP+XgnZGzB/15ErohBYgxzI95M3ExUmmNSuNSFqDvV9m58S427n5UoWW+flG1DDVEOwr1joBIt1evviUhuzBjWmjoB4BhcevrwX3Nk4H/tLJEdtvPo6duM3WoKIg8Ui9iVaxxb2FRWhQTOSvw9UXeVm0t4f8MxgE85MLZEsb5fAreo6iEpGITiBeGwFDHFOG55u4v5emNZIErAa5AoqWii3SSx67lAlBg0Vosq/s1NbCoJ0RRr2pXjAI+YUOU2oqzjNJuXcq0Nx1zh71ySX4nL18ZjSbtjfJWobGkk/cXPqI1N2eC1vMjG13YgUTXASK024/HYCXzPea/CKuj1y6OcNx0A+7UYAzYGggCKgfXfe7L1PvluT3I50cHBqQ2+qlHzha4eWNs1YY0YtD7c0fcDrwROAf7OpnivGQNRQSkYm0R3nsOBJY5LNxyBXSs+1z4VTNJLqxRPjBeYPxIl8kykKzoeLk8Az4618XrCen0KeHaUoRiD1wDw0DjOGbOtdTnvAaOAFkQZxHmq53r+h4g8QKKH8jhyJYyIPOn4sUfLk7AJUKv1OotkW9LRlqhYh/8nIusq9caMkINyJ/CvsXqYTE3He/sHkdYWzS/8iPXe/nrD4JAQhpuoKacyAOd87Ko12FVrkFxuSwOwM1/U2lDDGgdh42I1l4nIAmd5fg94uoSoQEva0lXavSXmIf6Fqn7EWeF+mdaJ1u22d0lBK2icxbikwoSyNEDyj2occwyL4yoRGUq2CBxrC8qUAAxR/HfVOPeNMfA8m/L7OarL13yds7CqsdiJO9ZVFfxm1zrYd8eyRwWhgtgbI1W0wK8b69wyNR3v3XOXMPf1s9UcepBPt0s2msLxzs2WGd+Hx5+OuK4nbEOiigRa4+5om8xUFpHbReRjbkf/BuAXblFNWrVSpvduWiYk61xab45d4ZSnFhytd3Gc9brcWXvVWvziBhF3T9Ij6amCJSWJmt00Mkjkbq2GdFWwllZjcYqPcedYLfgRXOr/IV1NMET84bUOwPG1bZvSrR8C9ztdVHMjes9Yx/jGHXvgVolJj2uqoj296h97pPoffofQ3GR0qsd7y4wnESH4z0OotRHf9USwKChhzrdhvSRnJZmtRGQDUUPuKx3n7aFEpQTHEDU598vEYtNSXCrwc1W9h/IsQm2MHh+MF5NOERmoIhOROkv4yUlyKVazvCKoAHBsIhY+HhmaQCCKgSJwG7Fqn3c1UZLijBQkIzNKQgC1loAliWtrSzm21zsdVEuv8fmXJ2qLKyK+2bjo+GaSY8DGRDzD1mr+PSeH5uQTPIqBMDCYge/zbC8fNvQS3rMU8jkmqgRLRKwaU1fpXgkg3ujOE5E+oqSem9z7+xGRL7yJKMnKq6AHa7xgTge+KiJvT5QnxQk0DRW4J9dvIVWsm7rcaXUn/e5VbUux13kGRgLg+L3GEia3mu39y+ixd01wPG8JLt0N7riNY3dBT2YSlufBwCC0NNncFz+s3ilv8LN47whkJE157CNPYB9/GmnIp+oQNX6/mKBKEIZxVu4i6gyINUFWIQnmKHXsUV8XkUOJYsY/douVlzJTMt75nqSqe5ZhEaok5rSl5mGQTZ66kbGU0FXSZm9rIrmVCi1W3ULPS8fHhGXVWtVopZ2MeO/uO9uGb3xGzZEHG83ivSOHYXM57M13YPv6o83LBEUHRAjCYkMIcC71zSVdAsYmTqByMeMPELmor0kJwuK+kyeKM1NSoF+oAACnbaHbbqmjpJqpLo1bKCLYlLDSZJQNYKGkpK1W53KxgrnVyhjbBqZ4XmPqq2A63B9DWgwDtRO38YkBtqcP71WHB7nzPoXsNM+jO4v3jlx+lIO16wluvBUaGibE+t3oS1XChpzGAKxbS2OHmPM5kbzli8iDInICUWPvNOU78cQ5qkxGZB+jx0Lj389xTDu2yk3et8smUF1Yc+qAckYVLdH4GLMSxx1NumvZ/VzCRNeXslRsFlGoqNp63cYBe8WNT0z7PvsogC9e4ChcJkbhhSI6VNDcu9tD/9Pv9cjnjGbx3tHdzy2NhIvvIHz0KaSpYeLiv9Gr0GjzxVpKxEj7qiRmHGczu0SoDxMRe4xWuB+fYw/n2rYlMb21KReJHYgaRFTbDbhPZgHXxyx3/+5dRfCL58CeCb7k0SzgVXVAxCGJbmBpWlXmgb2rCcBOr7uzea1x5S5oz5oCSlEQtnQfIQFk9nRt+PwHQ/PON3hZvDe9u14Ghggu+ytqZCKXUnWRiUIxGCzWmPWa6jXG5K14QJ6Xsj8sboc9PTlB3bGeSQHAIZGb7CXVqAF1x4ipEQ+tO/pZpmyRIcBR1XT9umO9soJN2NN1FAt+MsV9xRubl1fxvuK15chxc0EH1hREKGzpsKvJ+dgN3QP+W18bmFcc7rO+O4v3kq4nMm0t2BtuJfj3/UhL84S5n0Hj0Vron9NWrBUeWFWdrapzUry2UdXcOJik7iTKIk5DvN7A5tmQcZD+0QoWv5OrVAMaz+99gRelbIOYSW3QK57gyuXGFYpI9KJuBU5MsQmLP3uwHgjw3L8PVKDXN8WtJ6uwubWq2ga8eqybW3OuS2YtqB1SGDJbaMMjgBijtm+gN1y51gYX/yHH2nXQkJt6nYzGFPv1kQ29FH58GeqZCZ8XRgRFh26/fYuk8Vc68CGKu9wLPObA7bFhXo8Q9UR9TbIuuELpZhOhxGiKTwJn8u87U7L1KPB6Vd3DTXAzPsNHFPgg6Vq1ZVIbAGyBnYC3uuc3nkzLuBf1u9wxw5RsbP+pAwCOLZD7S+pwR9LrvsBr4x7fVdDr24jCRuHYAJhzFWB6Q8MAMGik+joXETAmDNd3d9tlK3NeU0NL8e4HCb7/K6SlZQItuXq1fi20tRJc8geC+x9FmpvA6kRuM9VEz3HgZDpCdZQpk6yVAlHiwwyi1oEzhnnNIsosPmAcFHTNRIkxabJHBxJgnXz/n+6aTYpYVRNwgZvgZiwWUNzIQVUPAE5PLFCZ1I8r+lxVneHCCGYsXiL32znAl1KEUeKx+hDwRAnZRS276+9nE7tdmg3yeara5LpejUev04EvjCX5KrEriH7XvXbNIDAoCGj1FldjDKpaCFat6dPV61tETIO1FpnextAlf8ReeRPMnA5Btjkf1vU8rQXuvI/Czy5HWpuj9yZ4lLtx0Q/QQXstuDE3uEmnRGUIOswr/uz4Mbh1jZtsewJzUv62U0R63eKliWzm/zqLfbRkjbjs6URV/ZjLzvYrAWEHvqGqNhNRbzZlJBx1ZwWrs1h/HHe2qgQs4u+63/6UKAteU/SiBrjOjTtT6xUMbqwPEhHraIp2iwq8EPhu3KhiDHqNPUs/AnYeT2jHuC2DzL+9YwCl31QxFmuMwRaLA+HyzkG6e9vEM75NpHhpzmdo4XeR+x6BtpYJB5b6aLqQQ3r6KCz8HrZ/cMLqfsvWR0hqLt4tPel8N3keKkN2UfqK3VJHqOorHTDlUrq6YzrI9yVKkWSUIv+7y8SDPJeIdUXKXXqccX2Rqr4rbhiuqsMCcbKeOQG+vyfq7Wqz2G9dgnAInKyqF7rsfDvSGEjkRviutM6q6g+AN6Z0kcabv9/Xob5+7+aWSanX96jqV0UkGINeQ1X9JvD2sbqeN98RLFwYn7jHiCCML/tOAPEMYf9AT7hspcrg0DQ8TzYzrFWRfI6wq5vBT3wFWbkampsyEE6Cr4I05iku+j7Fex+a4MSrzU3gaIDoGoD22tHS9YzOMpX87Eequp1rqO3FpUaJciUT1wG7XW5RVd8InJHChRtzR980gmXxW+eeHq2nrSR265eq6iJVbXCLhcbXmPjXT9Yzq+p+TjevG+8CkcmkSgyIZ6rqr1V1dmIMmPjZJ16SGAM7qer/AR9KSakalyb9XUTudiV49bAYxx6mm4kSx9L0nY71+nlVvURV55TRqzeMXueq6m+BT6bUayXdkGT1eNJ7NE7WERfvfW51zlhtjkpmtGxsU1qaCf77DEMfXoR09UBTBsJuWCEz2gi+cymFK65FZrRNml4EUecYiWpZ22sm+eJa0mUnx5/vQdSO7GUxE5abWJoAsNC531RV3w9cRpTAJCm4ZjvLtSZzO2xPRJYBv0yUHKXJ8FTgHOBWVT1FVafH15j4NyYROUBVLwTuAI6oxgKRSc2A8DuAu1X1LFXdMQaEkpeq6i6q+iWiDj1vHMMY+EY9hSviPAnHiPXtlB6mpF5PBe5S1TNVdYeEXsMyev2s0+vbqzW3IvqspUvFkVOtEhFExoDBCp5nUKsFu3ptv+3uafOM59nRDhWGSFsrxf8shQ98iYYfLkJnz4De/qjR/JS0fBWZOZ3wJ5cx9L1fwfTWCU26GiEGvApgcWenTHbLQQdoq1X1EuAsolivnyK7dD/gn6r6B+APwFK3sQiJkq22c+B1MnBIaUOoEawHH7hERNbHMdjne7FUgPOBU4hqhdPWFofAwcBvgOdU9Q6iDO+1RGVP84makr8ksShkSVdbHwjPB74FLFTVfxGFYFa478wjIlt5GVEtORWARPy9610fYq9OrN/N+oADvwI+QlRyZytwuc8HLnR6vd3pdaX7fAeimPFL2UTnWrWNbcmCpStMRMRR8fbH+AZbKPaHq9aE2j803fie2LTlRWGITGujeNeDcMbnyH/3S7DbTtDVM7VA2Ea+XpkxjfAnlzH4tf+F5kaXTqRMdrqhEZ4DOLpmiLBU3I79f4iSpGyKGsf4O+3uFRIldFkHZm0llvZoLu74eGuAC9016QibhmWq+gUiissgJYdskgpze6KuTYzQdMEro4csDlx/jFimzBhQoqz+V7nXcIBqUoKEJnoon+WsPa1PVlkpqOrHgCUp526pXqcTlSu+pkK9jnluRT/q3EdcQ4ZllZZ+ufpebN9Ab/jsKmsGC23ie1LxMwxDZForxYceZ/DUT8M/70FmTY9inlanRqlRzkOamwgu+CmDX/1RBL4ik18nLXgDNgShE4Alc7UGZpt1rqdVwEcTsR9NmWEaJnaysxyAtyU+syl7AseT8tPuWobt4+t26p6I/Aj4swPfoIK5ahKZ3UHiHoJER5Zy7vKMgIO6rQcufc9LjNHhxoBXgQ0Vz4HPiMiDZWhU68kK9kTkFuCrY5hbY9WrHW8SFsxdqi4nevlAGICmO+DG+t6ung32uc6csbbVjgcwwhBpbSZctYaB936B8OdXRIlHDbmtNy6sRCVYrc3IUIHiJ89n8KJfQmuzq8CddMtXPZAhGxbC0Lgm4ftojU263wNfS5BNaIp9o5eYdMmXDGNBMkyz+RzwMxH5RUrXXZw0cgYRg49fYatAcb/xE/fgD7M4aCK55uoUySmZ1EZd62rgvhH4x6XkuY80BkYbvz7wCxH5br25noeZWx5RzsSf3NwsVji3KtFrvPn+G5v6bWvlAOwaMgRF89RgGIRGjBmNDzqq76UQrlrbp53rmkVMg5XqWILS2ICqMnjudyl+4ivI6nXIjOmRJbw1kXaENnI5z5oO9z3M4P+czdAfr0NmTIvutUY8QZ4YgC7fH3IekkVaa5NORL5AlIThV0iMXlq2lHahDN0EvwL4kItB2ZRJIyIi64haFz7mrrm4BRbz2Lr5hrMKTAbCddMP+G3Av93zC7bQ2IjH7/vSjt86SMiK7+EdRBUJuQQXQDWl6J7Nta5MMT92C3hRtKB6MxueFVjjj1ILbIwhLBYHw+WrBrS7p008k7PVvD9ro8YM01sZ+stNDLztE4SXX400NkBLcwRc9QzE1jp2qxbEGMIf/IaBd32aYOnjEfjWlLWvmkNA5Km5S5f01eqkc2UTZxGVBwSJBIuw2v6KxE75h0R0gcUEMXslSWRPAse6hTbnFo9qXG+YsJR/LCKfYVMCSSa1L01E3YhOAG5NeHZsFceGB/zEjd+gkvFbByAsItIPvB7oSIRlwirF5q2br9cDbyGKn+fGDMDO0SnbdvywV0UezXseaPmHLcYQ9A/02GUrrQwOTX9efW81s4FDi0yfRrh6HQNnf53C+74Adz2ITG+NaoZtnQFxDLxNjci0Vvjn3Qyd+mkGz/tfNAwjislac7Wr2FzEZvaQgGp7uyc1xg8bM1w5EL6QqCfvP0rczGHKGPFw1kKQALWVwKmuVaHGrFdjdJ8/TdSl5qeJWJRN6Uovd51x9nM/8HER+UA1OitlMuEJWK0isoaI6P/HibDIWMaxJsDHI0o6/JCIvH+s47fGQTjekA+IyMnA54GhkrVgLPoLE7kYFwGvF5E+ouYr4fjqgBcs8BwYL82JQKIUKa7vFWPCsKu7R5d3jlzfW2UqRsnlkLYWCov/xcCpZ1P85Pnw4GNIa0sUK1WNgKsWk/fcRgKr0NIUbR4e/i/Fs75G/7s/T/GuB2DGtMjir8HNRJTSq0jEtwqTXII0SmvC2LK8HVhAlB19W0lcVxIAV5rMVPqeLYkLrSUqAzlIRH4Zk7mPdfGKyydEpEdE3ud27P9KAHF8rclrtInrj6/Xltzj9cCRLq6XS1Bwpn2lXZSqebzsnCUrn9s4DYjIB4hqeu8rGcdhyVi1Zca2LWGEuxx4mYj8aBzjt5o62SL6jSlg3ebiPKI2hNcmdJGcW8EIcyssyRm5GzhBRD4BFOOuSBXeC88vQ5obZbaqtbeHyvtRJI6IecZgrS3a1ev6dENPqzGebyfSCIprY6e1oKFlqOMaitfdQu6Vh+GffALy4n2huREdHIKhwsaamUlrceiuFwXyPtLUCMUAvXsphd9fTXDdLdjuHqStFcnXdoKZCt6gtXjKHQAdNZABnRLULPBr4NeqeiRRK7ZXEtX0NVZwyHVu0v0Z+D8RWZ7kW67Sbl2c2+wqVf0rUZnR6W4T0ZbSeu0minn9WESuS3R+siVMXV6KssQ058uPcrz4WLkqPt5cwgvBMCUljDUeN8J9yAj3IVvgnJtxHTsT9c+qeh1RbPN0ov7OaWs0lxMl4f1cRO4Y5/gVonK9kXImcuXLXEd8prlRnmnDGD1j8b3+GzheVY8C3g0cB8xNOdYLRM1ULgZ+FzPpJdabSnSSK0vTpwsXGlm0yK457vR9xPCfUPFRxfM8CYtRfS/9Qy3ie2bSy8Q8A0GI9g0gDXn8F++D/9qjMUe9FNlpO9R4ERAXCs6qFMd6LVuG32Uj4Lo+QbkcNOYREXTlGvSfd1O88m+Et/8H2zcQNVTwvcgypqZTMjUvIkNqO1tyg3vPuP8f62ukExIVcDmHJe+/ANjLAfGOwGyi+KhxO95eoprep4mylB8VkRXJRgeA3RIuu9JFUVXnu4X2ZcCuwLZEZCEAfURxwiec1Xy7iDybuHeJwd0t5NOImkqkyRB/UkTWDueadMfffZSNTJxR3i0iT1fDzen0kYbApCAij4x3/Di9zWNTI47RyFgeKQdqjio0UNXzgc+MUP8dn2M9sL+ILI83k2XGxj7A4URc3zu7cRy7Qnsc6D7mgONOl/SXbNJgx6gX35G+mBTjaIW7h+c9+4R+5zsg1BRJTw+OddPr7lsToDyXiLjmcDeWt3cEJsZ1NFsNPEXEfPXP5Hgq8ywaiEhQ0uhkpeMCiJq1PI/yd8FCr7Pp6Xua/dx+/TZU+gf77aq1KjZsJYoF1o5v1BiwivYPQGjxtpuDd8j+eEe9FHPwvsiO24HLqGaoEJX7bHRVJ8A4aSmXWs3KprER/62b0X9Fr3wOyflQDGDVGux9jxAuuYPgn/dgn34OFaIYr+dczTUPYaBoOM3kvO6weNX2j9z4emWhERbZ+iMX27RbHcfkNUC4pWNliXitllskY8L4YYAx7tSScbnW1vgbNwCXjA073MZouPHp5oDWY43vRK4Fo2w6TbU335sPgvZ2Ix2LglXHn3Fj3vf361vdtU7XrG81SIOtBUKI54XFo7EkLc0gYDf0El55M3Llzcg2s/D23AXvxfti9tsT2WMXZM7MqOuS76HWIqpoaCNQtgpqn886ZQTERGDvuZcYMM5D3zeArt8ATy4jePAx9O4HCR54DPvcKjQIoakBaWuJvhsnYdVRVaKJ/r0aYPGCxYYl1GWRfilIlXAta5mypPgz6xYtO4EJZWGZa7Uxb3WZjYGOtrhW2At51IzYSlq4VWvRn6Rzptbblga3MmMj1sdmYyMBFpIYw2EVQcxUcRxNqH5jPZTqKH4/ocNycyustk42A+AO929O9Q/rn1vxIV3f3Saen7e1bq7FyUu+FyU5AdrXT/H2/1C85U4kn0emt+LtuB3M3x5v5+0x8+dht90GmTkN09oMTY3QkIecH1m0IhEwBwEUijAwhPb1Y7t7kc516PKVhE8th2dWED69HLuuC+0biH7bkENamiNjuk5rlxXUE+N122BAkGsBFi9ZYreGDMl6vtakBVzJxmAMvZBrTo+TdM4tkWBVLV3Y0nFRCtS1/hwmS7/ldFSiw4o23WPVSenOQxS4i4P97feYcWdLLndAnw1CQbw6XGk3vdRGMeOiA1NXToURpLkJaWmCxgbI56PYrGccADvruBjA0BD0D2J7+6P/q6JqwfeRXM79zts8HlzXlDwaTjM5syEMrt7hkRtepwsxsigjccgkk8lyQWey9UnpINDFCxb4xyxZUlzpvfoXOTHf1nrpSzVcYlQsnof4XsSvnAzrWovd0Avru58PnnE82LmhxZjISm5scCFk2fw3WxNdpiIWFRPVILJ40QIDS7KFIJNMMslkCwEwRy9ZEgJS6OWXG1qLn20Qb25BrUqd4nBpg/ty3g7xvU3Z7jICQ2s5YN869+xhi/FNTxjcu6L1BdcuBHM0S7LEnkwyySQTqttxo9QnrUq7mb/s+nWg324xnqjq1m35JK1YW+a1lbiVK1GHERFBv/ySu35SPLe9vS5KjzLJJJNM6hqAI+mwC8GQl+93BYXHmz3PUzRzPzIVWhJrOM3LeT1h4abtH7npD8pCIx0d2bPPJJNMMpkIABbQfWmXeffd0KeGjxsEg8kW4a2/F5rmxMigDfsJ9WPRu4sgs34zySSTTCbKAoaT6QhvZoG//UM3Xt0XhBfN8HxfteptsTKpIRElbPV8M2jDs7d//G9LlXZPsvZ1mWSSSSYTC8AAR7MkvJx2b54/49Prw+I/pnm+r2QgvJWav8WZfs5fHxQu3fHRm34YdT3KXM+ZZJJJJpMCwALazj4qSzsKxTB8W7+GTzZHjRiyjNitK+kqmOb5ua6weEthsPgBZaEhivtmrudMMskkk8kA4AiEF9nLaffmP/a35YPWnhiqdjYbz7OagfBWBL5+nw3v7w68N+/69JLBePOVaSeTTDLJZBIBGDbFg+c/cuP9Q6onhKqrWzzfyyxh6jzjmWC65/sDNniwUOS1ez5+7WqFumy4kEkmmWSyVQIwwDEsCbS93dv+4evv6gn01aHap6abnJclZtVntrNCMMvP+f02vKPXFF6143+vf/byLOkqk0wyyaT2ABhAOjrCmxcs8Hd97Ib/dFs5pj8Mb5/p53xFw6xOuE6sXvecZnk5vzcMrlijvcfuunTJystp906mI/NoZJJJJpnUIgADHLNkSaC0e7s+ct1Tz3Xpq7qD4k/bTM5rEM+oEmgWO6xZq9dqRDHZIKJdYfGcbR6+vv2Fj/yzR1loMvDNJJMJa6Sa5pXJFBAZT6vY2F25Yu9j39aAfL3J8+d3h0VCJUDw6p4/equY7WpV0bwxXovx6bfBfcVQz5z36A1/U/d8soSrTDKZkG5IXwc+TbRujmT8bAD2zbohZRbwSMhtFURZaOY9fMPvCn7w0m4bfNsT6Znp5/y8iCgaqmqYWcVMAqNkFBZoFM/M8vOeKqt6wuLnn+pae1gEvu2egGbgm0kmEyZFIh6FAWCozGvQ/TuQWcGZBVyBldXuiXNhrtr9mN08P/c+C6c0G29HgEENKai1omIVFYm6IUtmIVfHtQyqsW4RMQ1ipNEYAlUCtQ8Z5JLBIXvJvCdu6ATI4r2ZZDKhFrCIiKrqbGCOA2EZYU0OgGdFJEtwzQA4NRAItJsYiJ/cecGMpqbc8QZzkogekRMzLy8GqzCklkCVEFWUUCJXqbirkc2b8brWu1MSWOPuVBp3Ho7fVQFU8HxEfBEajEEUBtQSYJ8yyGJVuWIbM+0GWdpRAND2do+ODptZvZlkkkkmWxEAJ2PDtLeLdGyysLr3fN2cflM4SFWPMMJBgXKgJ2ybE9PYbKI+vKEqCliUUBXr/rbufSKX91bumZF45yECGBEMgpf427i/FeizAaGlT9HlItwr6F2B5da8NN+7zSN/6YmPevOCBf7RS5aEGfBmksnkWsJp19ws7psB8Pgt4vZ209EREXls9tnOCxpXNuTnGdE9A2G+sczHyM6KzhOV2QrTQJtFpFmVZk8kl5fYPN7cHpY6ToV8/hvRxqOgFkWHVBlApF+UXhG6FdYorDDwpCrPgjyds7lHV+aaV+/nrNxkWIB2yCzeTDLJJJMpBsDl3NMs6BSWHG1HY1p6Zsf2JtO6rrnJ85oHAmn2tdhgxeStaC5nxQsNnqgxoQk9UWMAxEqUUOZZI4qAEaId5yRr2FgIUUEJjfXEaiCiAJ5oqNZaz3hhMVTrGQIPUwzVFoxhcKhYHNB8Q/9gwfTt+fi1QyOd5nLavW0WdMrqJXO1nQx0M8kkk0wyAB4WkBFoFxZ0CnPnakcHtLOPwqIsM3dYnS0UWCqLF3TK0QBL5iquY1Gms0wyySSTDICrBdDu+hYC0MFSaa/0QO01cDMdlX892ogALNqUdpUBbCaZZJLJViX/H6nN74Za+jwWAAAAAElFTkSuQmCC";
+    const DATA = {"cols":["gender","age","gD93Jv4RsVrLM1BLIxi2","85l5befVGh0EmPnsYUgD","2nzdjYT1Zhfe6kw1ofyJ","uwiY6jETXFj5EvKJ5TeA","aGGE6vsKfA4KeRXrgdCl","mrQTHKpHOtlnojaDh01N","Ev7hKwF9zbsZCxW8GTgO","maZKl9LlvG9HatQnETrp","le44kizWgnvRAZP4L33z","sAsDXBShoomNyU7Q4Sjc","rqeytIUKMNvWay3G7ydk"],"cats":{"gD93Jv4RsVrLM1BLIxi2":["Sí, estoy estudiando","Sí, estoy estudiando y también trabajando","No, estoy trabajando","No estoy estudiando ni trabajando"],"85l5befVGh0EmPnsYUgD":["Universidad","FP","Preparación Oposición","Bachillerato","ESO","Educación para adultos","Otro"],"2nzdjYT1Zhfe6kw1ofyJ":["Subrayado","Resúmenes","Ninguna de las anteriores","Esquemas y mapas mentales","Flashcards (fichas)","Método Pomodoro"],"uwiY6jETXFj5EvKJ5TeA":["Sí, las he usado","No, todavía no las he usado"],"aGGE6vsKfA4KeRXrgdCl":["Excelente","Bueno","Aceptable","Mejorable"],"mrQTHKpHOtlnojaDh01N":["Sí, seguro","Sí, posiblemente","Quizá"],"Ev7hKwF9zbsZCxW8GTgO":["Ambas","A5 para esquemas o mapas mentales","A7 para preguntas y respuestas o conceptos"],"maZKl9LlvG9HatQnETrp":["Sí, la he usado y me parece útil","Sí, la he usado, pero no me parece útil","No, no la he usado"],"le44kizWgnvRAZP4L33z":["Excelente","Buena","Aceptable","Mejorable","Mala"],"sAsDXBShoomNyU7Q4Sjc":["Todo perfecto","La calidad de sus materiales","Variedad de productos","Es una buena marca","La calidad del papel","El diseño de sus productos","Buen relación calidad-precio"]},"rows":[[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,50,2,-1,0,0,1,1,0,2,0,1,10],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,50,2,-1,0,0,1,1,0,2,0,1,10],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,50,2,-1,0,0,1,1,0,2,0,1,10],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,50,2,-1,0,0,1,1,0,2,0,1,10],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,50,2,-1,0,0,1,1,0,2,0,1,10],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,42,1,1,1,1,-1,-1,-1,2,1,0,10],[1,33,0,0,0,1,-1,-1,-1,2,0,4,10],[0,35,2,-1,0,0,0,0,2,0,0,0,9],[0,52,2,-1,0,1,-1,-1,-1,2,0,1,9],[2,25,2,-1,0,0,0,0,2,2,0,1,7],[0,52,2,-1,0,1,-1,-1,-1,2,0,-1,-1],[0,26,1,3,0,1,-1,-1,-1,2,2,-1,10],[0,41,1,1,0,1,-1,-1,-1,2,0,5,9],[0,25,1,0,1,0,0,0,0,0,0,0,10],[0,19,1,0,1,0,0,0,1,2,0,1,10],[1,57,0,5,0,1,-1,-1,-1,2,0,2,9],[0,66,3,-1,2,1,-1,-1,-1,2,2,3,8],[2,20,0,1,0,1,-1,-1,-1,2,2,1,10],[1,40,2,-1,0,0,0,0,0,0,0,1,9],[0,86,2,-1,0,1,-1,-1,-1,2,0,3,9],[2,46,2,-1,2,0,1,1,0,0,1,1,9],[0,31,1,2,1,0,0,0,1,2,0,2,10],[0,43,0,4,1,0,0,0,1,0,0,0,8],[1,29,1,2,0,1,-1,-1,-1,2,0,0,8],[0,16,0,4,0,0,0,0,0,0,0,0,9],[0,25,1,3,0,0,0,1,0,0,1,6,9],[1,56,2,-1,0,0,0,1,0,2,0,-1,10],[0,30,2,-1,0,1,-1,-1,-1,2,0,0,10],[0,31,2,-1,0,1,-1,-1,-1,0,1,4,8],[0,43,3,-1,2,0,1,1,0,0,1,0,8],[0,38,1,0,0,1,-1,-1,-1,2,0,1,8],[0,75,3,-1,3,0,0,1,1,2,0,3,10],[1,56,3,-1,2,1,-1,-1,-1,2,1,3,8],[0,50,3,-1,0,1,-1,-1,-1,0,1,1,9],[1,42,1,0,1,0,1,1,1,1,1,0,9],[0,32,0,0,0,0,0,0,0,2,0,4,10],[0,18,0,1,0,1,-1,-1,-1,2,2,4,5],[0,53,2,-1,0,0,1,1,0,0,2,2,5],[0,26,0,0,0,1,-1,-1,-1,2,1,0,7],[2,52,2,-1,0,0,1,0,1,0,1,6,9],[0,35,1,6,1,1,-1,-1,-1,2,0,2,10],[2,20,0,1,0,1,-1,-1,-1,2,2,2,5],[0,53,2,-1,0,0,0,1,1,2,0,0,8],[0,40,1,2,0,1,-1,-1,-1,2,1,2,7],[0,49,1,2,4,0,0,0,1,2,0,5,10],[1,39,2,-1,0,1,2,-1,-1,-1,-1,-1,-1],[2,41,2,-1,0,0,0,2,0,2,0,1,9],[0,40,2,-1,0,0,0,1,2,2,0,0,5],[0,21,2,-1,1,1,-1,-1,-1,2,4,0,10],[0,58,2,-1,1,1,-1,-1,-1,0,0,1,8],[1,25,2,-1,1,1,-1,-1,-1,2,2,1,7],[0,31,2,-1,3,0,1,1,0,2,1,-1,9],[0,27,2,-1,0,1,-1,-1,-1,0,0,3,9],[0,79,3,-1,2,1,-1,-1,-1,2,1,-1,10],[0,63,3,-1,0,1,-1,-1,-1,2,1,0,9],[1,61,2,-1,1,1,-1,-1,-1,2,2,0,9],[0,46,2,-1,0,1,-1,-1,-1,2,1,1,8],[1,54,-1,-1,0,1,-1,-1,-1,2,0,1,9],[1,42,0,2,0,1,-1,-1,-1,2,1,1,9],[1,52,3,-1,2,1,-1,-1,-1,2,4,0,1],[2,24,1,0,0,1,-1,-1,-1,2,0,1,9],[0,36,2,-1,0,0,1,0,2,2,0,0,10],[0,40,1,0,4,1,-1,-1,-1,0,0,3,9],[0,23,0,0,0,1,-1,-1,-1,2,2,6,1],[0,61,3,-1,0,1,-1,-1,-1,2,1,0,8],[0,63,2,-1,1,1,-1,-1,-1,2,0,0,4],[0,53,2,-1,0,1,-1,-1,-1,2,0,2,10],[0,57,2,-1,0,0,1,0,1,0,3,1,6],[2,28,0,0,0,1,-1,-1,-1,2,1,1,7],[0,31,0,0,0,0,0,1,2,2,0,3,10],[0,57,2,-1,0,1,-1,-1,-1,2,3,0,2],[0,43,0,1,0,1,-1,-1,-1,2,0,1,8],[0,22,0,0,5,0,0,0,1,2,0,1,10],[1,23,1,3,1,0,3,1,0,2,0,0,7],[1,52,2,-1,0,1,-1,-1,-1,2,0,5,10],[1,54,2,-1,2,1,-1,-1,-1,2,0,0,10],[0,28,0,1,0,1,-1,-1,-1,2,1,3,8],[0,70,0,0,0,0,1,0,2,2,0,2,8],[1,54,2,-1,1,1,-1,-1,-1,2,3,1,7],[0,38,2,-1,0,0,0,0,0,2,0,1,9],[0,61,2,-1,4,0,2,2,1,2,2,0,8],[0,29,0,1,0,0,0,0,2,2,0,-1,10],[2,43,2,-1,0,1,-1,-1,-1,1,0,0,4],[0,41,2,-1,0,0,0,0,1,0,0,0,10],[1,52,2,-1,3,1,-1,-1,-1,2,1,0,5],[0,50,2,-1,0,0,1,1,0,2,0,1,10]]};
+
+    /* ═══════════════════════════════════════════════════════════
+       DASHBOARD · Flashcards Oxford · Samplia X Rambla Catalunya
+       Micro-dato embebido: los filtros recalculan en cliente, así que
+       el informe funciona abierto desde un archivo, sin servidor.
+       ═══════════════════════════════════════════════════════════ */
+
+    /* ── Formato y utilidades ───────────────────────────────────── */
+    const nf = n => new Intl.NumberFormat('es-ES').format(Math.round(n));
+    const pf = (n, d) => (n).toFixed(d === undefined ? 1 : d).replace('.', ',') + '%';
+    const df = (n, d) => (n).toFixed(d === undefined ? 2 : d).replace('.', ',');
+    const pct = (a, b) => b > 0 ? a / b * 100 : 0;
+    const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const $ = s => document.querySelector(s);
+    const $$ = s => [...document.querySelectorAll(s)];
+
+    /* Luminancia relativa: decide si el rótulo va en tinta o en blanco. */
+    function inkOn(hex) {
+      const c = hex.replace('#', '');
+      const [r, g, b] = [0, 2, 4]
+        .map(i => parseInt(c.slice(i, i + 2), 16) / 255)
+        .map(v => v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4));
+      return .2126 * r + .7152 * g + .0722 * b > .42 ? '#0F1729' : '#FFFFFF';
+    }
+
+    /* Corte de rótulos por ancho REAL, no por número de caracteres.
+       Chart.js reserva para el eje de categorías el ancho que pida el
+       rótulo más largo, pero con un tope: si el texto se pasa, la primera
+       letra se corta contra el borde del lienzo. Midiendo con la misma
+       tipografía que va a pintar el gráfico, el rótulo nunca pide más de
+       lo que el eje puede darle, y da igual si Manrope ha cargado o no. */
+    let _mctx = null;
+    function measureCtx(fs, weight) {
+      if (!_mctx) _mctx = document.createElement('canvas').getContext('2d');
+      _mctx.font = (weight || 600) + ' ' + fs + 'px ' + Chart.defaults.font.family;
+      return _mctx;
+    }
+    function ellipsize(line, ctx, budget) {
+      if (ctx.measureText(line).width <= budget) return line;
+      let s = line;
+      while (s.length > 1 && ctx.measureText(s + '…').width > budget) s = s.slice(0, -1);
+      return s.trim() + '…';
+    }
+    function wrapLabel(text, ctx, budget, maxLines) {
+      const words = String(text).trim().split(/\s+/);
+      const lines = [];
+      let cur = '';
+      for (const w of words) {
+        const t = cur ? cur + ' ' + w : w;
+        if (!cur || ctx.measureText(t).width <= budget) cur = t;
+        else { lines.push(cur); cur = w; }
+      }
+      if (cur) lines.push(cur);
+      const out = lines.length <= maxLines
+        ? lines
+        : lines.slice(0, maxLines - 1).concat(lines.slice(maxLines - 1).join(' '));
+      return out.map(l => ellipsize(l, ctx, budget));
+    }
+
+    /* ── Paleta ─────────────────────────────────────────────────── */
+    const C = {
+      ink: '#0F1729', red: '#E0253F', red2: '#E9455B', rose: '#FBDBDF',
+      blue: '#375395', brick: '#C21D03',
+      b900: '#23355F', b800: '#293E6F', b700: '#314A85', b500: '#375395',
+      b400: '#5B72A8', b300: '#8798BF', b200: '#B3BED7', b100: '#D3D9E8',
+      n100: '#F4F5F7', n200: '#E9EAEE', n300: '#D7DAE1', n500: '#9BA1AE', n600: '#6C7280'
+    };
+    /* Rampa monocroma de oscuro a claro: como las filas llegan ordenadas
+       por volumen, la intensidad acompaña al valor y se lee de un vistazo. */
+    const BLUE_RAMP = ['#23355F', '#2E437A', '#375395', '#46609E', '#5B72A8',
+      '#7285B6', '#8798BF', '#9DABCB', '#B3BED7', '#C4CCDF', '#D3D9E8'];
+    const RED_RAMP = ['#C21D03', '#D22212', '#E0253F', '#E53F53', '#E9455B',
+      '#EE6B7C', '#F2919D', '#F6B6BE'];
+    /* Las categorías que no son una opción real (un «otros», un «ninguno»)
+       se van al gris: no compiten con las que sí dicen algo. */
+    const NEUTRAL_RE = /^otros?$|^otras?$|ninguna de las anteriores|ninguno|no sabe|ns\/nc/i;
+
+    /* ── Modelo de datos ────────────────────────────────────────── */
+    const IX = {};
+    DATA.cols.forEach((c, i) => IX[c] = i);
+    const ROWS = DATA.rows;
+    const I_GEN = IX.gender, I_AGE = IX.age;
+
+    /* Tramos de edad: la misma lógica del CASE de BigQuery que alimenta
+       el resto de informes de la campaña, para que las cifras casen. */
+    const BANDS = ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'];
+    function bandOfAge(a) {
+      if (a < 0) return null;
+      if (a <= 24) return '18-24';
+      if (a <= 34) return '25-34';
+      if (a <= 44) return '35-44';
+      if (a <= 54) return '45-54';
+      if (a <= 64) return '55-64';
+      return '65+';
+    }
+    const GEN_LABEL = { 0: 'Femenino', 1: 'Masculino', 2: 'Sin declarar' };
+    const GEN_COLOR = { 0: C.red, 1: C.b500, 2: C.n300 };
+
+    const FILT = { gen: new Set(), age: new Set() };
+    function passes(r) {
+      if (FILT.gen.size && !FILT.gen.has(r[I_GEN])) return false;
+      if (FILT.age.size) {
+        const b = bandOfAge(r[I_AGE]);
+        if (!b || !FILT.age.has(b)) return false;
+      }
+      return true;
+    }
+    const isFiltered = () => FILT.gen.size > 0 || FILT.age.size > 0;
+    let VIEW = ROWS;
+
+    /* ── Agregadores ────────────────────────────────────────────── */
+    /* Reparto de una pregunta categórica. `base` son quienes contestan
+       esa pregunta, no el total de la muestra: los porcentajes se leen
+       sobre quien responde, que es lo que significan. */
+    function catRows(rows, col, opt) {
+      const cats = DATA.cats[col], ci = IX[col];
+      const counts = new Array(cats.length).fill(0);
+      let base = 0;
+      for (const r of rows) {
+        const v = r[ci];
+        if (v < 0) continue;
+        counts[v]++; base++;
+      }
+      let out = cats.map((label, i) => ({ label, value: counts[i], i }));
+      if (!(opt && opt.keepOrder)) out.sort((a, b) => b.value - a.value);
+      return { rows: out.filter(r => r.value > 0), base, all: out };
+    }
+
+    /* Estadísticos de una escala numérica cerrada. */
+    function scaleStats(rows, col, lo, hi) {
+      const ci = IX[col];
+      const hist = new Array(hi - lo + 1).fill(0);
+      let n = 0, sum = 0;
+      for (const r of rows) {
+        const v = r[ci];
+        if (v === null || v === undefined || v < lo || v > hi) continue;
+        hist[v - lo]++; n++; sum += v;
+      }
+      return { hist, n, sum, mean: n ? sum / n : 0, lo, hi };
+    }
+
+    /* Media de una escala ordinal de texto: cada etiqueta vale un número. */
+    function ordMean(rows, col, map) {
+      const cats = DATA.cats[col], ci = IX[col];
+      let n = 0, sum = 0, top = 0;
+      for (const r of rows) {
+        const v = r[ci];
+        if (v < 0) continue;
+        const s = map[cats[v]];
+        if (s === undefined) continue;
+        n++; sum += s;
+        if (s >= 4) top++;
+      }
+      return { n, mean: n ? sum / n : 0, t2b: n ? pct(top, n) : 0 };
+    }
+
+    /* Cuántos responden una de estas etiquetas, sobre quienes contestan. */
+    function countAny(rows, col, labels) {
+      const cats = DATA.cats[col], ci = IX[col];
+      const idx = new Set(labels.map(l => cats.indexOf(l)).filter(i => i >= 0));
+      let hit = 0, base = 0;
+      for (const r of rows) {
+        if (r[ci] < 0) continue;
+        base++; if (idx.has(r[ci])) hit++;
+      }
+      return { hit, base, pct: pct(hit, base) };
+    }
+
+    function npsOf(rows, col) {
+      const ci = IX[col];
+      let p = 0, pa = 0, d = 0, n = 0, sum = 0;
+      for (const r of rows) {
+        const v = r[ci];
+        if (v < 0) continue;
+        n++; sum += v;
+        if (v >= 9) p++; else if (v >= 7) pa++; else d++;
+      }
+      return { prom: p, pas: pa, det: d, n, mean: n ? sum / n : 0, score: n ? (p - d) / n * 100 : 0 };
+    }
+
+    /* ── Definición del informe ─────────────────────────────────── */
+    const SCALE_CAL = { 'Excelente': 5, 'Bueno': 4, 'Buena': 4, 'Aceptable': 3, 'Mejorable': 2, 'Mala': 1 };
+    /* Abanico completo de la escala verbal. Las opciones que nadie eligió
+       no llegan en los datos, así que hay que nombrarlas aquí para que el
+       eje enseñe todas las respuestas posibles y no sólo las votadas. */
+    const SCALE_CAL_ALL = ['Excelente', 'Bueno', 'Aceptable', 'Mejorable', 'Mala'];
+
+    /* ── Referencias de la promoción anterior ───────────────────── */
+    /* Cifras cerradas del estudio de la promoción de Oxford de septiembre
+       de 2025. No dependen del filtro: lo que se mueve al filtrar es el
+       dato de esta campaña y, con él, la diferencia que muestra la píldora. */
+    const BENCH_LABEL = 'Promoción Oxford · septiembre de 2025';
+    const BENCH = {
+      q5_t2b: 85,     /* Top-2-Box del código de color */
+      q6_seguro: 40,  /* «Sí, seguro» a si ayudarán a estudiar mejor */
+      q11_mean: 7.76, /* media de intención de recomendación */
+      q11_rec: 53     /* % que recomendaría */
+    };
+
+    /* Minipíldora de contraste: va dentro de la insignia, justo detrás del
+       dato de esta campaña. Sin dato actual (un filtro que deja la pregunta
+       sin base) no se pinta: comparar contra nada induce a error. */
+    function benchMini(name, ref, cur, kind) {
+      if (cur === null || cur === undefined || !isFinite(cur)) return '';
+      const d = cur - ref;
+      const val = kind === 'mean' ? df(ref, 2) : pf(ref, 0);
+      const gap = (d >= 0 ? '+' : '−')
+        + (kind === 'mean' ? df(Math.abs(d), 2) : df(Math.abs(d), 1));
+      return `<em class="minipill ${d >= 0 ? 'up' : 'down'}"`
+        + ` title="${esc(BENCH_LABEL + ' · ' + name + ': ' + val)}">`
+        + `${val}<b>${gap}</b></em>`;
+    }
+
+    const Q = {
+      q1: {
+        id: 'q1', col: 'gD93Jv4RsVrLM1BLIxi2', t: '¿Estudias actualmente?', keepOrder: true
+      },
+      q2: {
+        id: 'q2', col: '85l5befVGh0EmPnsYUgD',
+        t: '¿Qué nivel de educación estás estudiando actualmente?',
+        note: 'Sólo entre quienes declaran estar estudiando.'
+      },
+      q3: {
+        id: 'q3', col: '2nzdjYT1Zhfe6kw1ofyJ',
+        t: 'Las técnicas de estudio son herramientas que ayudan a mejorar la comprensión y memorización. Marca aquellas que uses o hayan usado.'
+      },
+      q4: {
+        id: 'q4', col: 'uwiY6jETXFj5EvKJ5TeA',
+        t: '¿Has usado las Flashcards que recibiste gratis con Samplia?', keepOrder: true
+      },
+      q5: {
+        id: 'q5', col: 'aGGE6vsKfA4KeRXrgdCl',
+        t: '¿Cómo calificarías que las flashcards de Oxford tengan distintos colores para codificar por tema o materia?',
+        note: 'Sólo entre quienes ya han usado las flashcards.', keepOrder: true
+      },
+      q6: {
+        id: 'q6', col: 'mrQTHKpHOtlnojaDh01N',
+        t: '¿Crees que las flashcards te ayudarán a estudiar mejor?',
+        note: 'Sólo entre quienes ya han usado las flashcards.', keepOrder: true
+      },
+      q7: {
+        id: 'q7', col: 'Ev7hKwF9zbsZCxW8GTgO', t: '¿Qué formato de Flashcards te parece más útil?',
+        note: 'Sólo entre quienes ya han usado las flashcards.'
+      },
+      q8: {
+        id: 'q8', col: 'maZKl9LlvG9HatQnETrp', t: '¿Has usado la aplicación Scribzee?', keepOrder: true
+      },
+      q9: {
+        id: 'q9', col: 'le44kizWgnvRAZP4L33z', t: '¿Cómo valoras tu experiencia en la pop up de Samplia?',
+        keepOrder: true
+      },
+      q10: {
+        id: 'q10', col: 'sAsDXBShoomNyU7Q4Sjc',
+        t: '¿Qué destacarías de Oxford como marca? Cuéntanos qué te gusta, qué mejorarías o qué te transmite.',
+        note: 'Respuesta abierta, agrupada por tema.'
+      },
+      q11: {
+        id: 'q11', col: 'rqeytIUKMNvWay3G7ydk',
+        t: '¿Recomendarías las flashcards de Oxford a otros estudiantes?'
+      }
+    };
+
+    /* Índice del desplegable del rail: el orden es el del informe. */
+    const QLIST = [
+      { h: 'c-edad', t: 'Distribución por género y edad' },
+      ...['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11']
+        .map(k => ({ h: 'c-' + k, t: Q[k].t }))
+    ];
+
+    const SECTIONS = [
+      { h: 'perfil', t: 'Perfil del encuestado' },
+      { h: 'habitos', t: 'Hábitos de estudio' },
+      { h: 'flashcards', t: 'Las flashcards de Oxford' },
+      { h: 'experiencia', t: 'La experiencia en la pop up' },
+      { h: 'marca', t: 'La marca Oxford' },
+      { h: 'recomendacion', t: 'Recomendación' },
+      { h: 'insights', t: 'Tres lecturas de negocio' }
+    ];
+
+    /* Altura del lienzo de una barra horizontal: crece con el número de
+       categorías, así las barras conservan su grosor en todos los bloques. */
+    const hBarH = n => 34 + n * 46;
+
+    const cardBarH = (q, d) => `
+      <article class="card" id="c-${q.id}" data-reveal="card"${d ? ` style="--d:${d}"` : ''}>
+        <div class="card-hd"><h3>${esc(q.t)}</h3><div class="chips" id="${q.id}_chips"></div></div>
+        <div class="cv" id="${q.id}_cv"><canvas id="cv-${q.id}"></canvas></div>
+        ${q.note ? `<div class="sub">${esc(q.note)}</div>` : ''}
+        <div class="base" id="${q.id}_base"></div>
+      </article>`;
+    const cardLeaderboard = (q, d) => `
+      <article class="card" id="c-${q.id}" data-reveal="card"${d ? ` style="--d:${d}"` : ''}>
+        <div class="card-hd"><h3>${esc(q.t)}</h3><div class="chips" id="${q.id}_chips"></div></div>
+        <div class="leaderboard" id="${q.id}_leaderboard" aria-live="polite"></div>
+        ${q.note ? `<div class="sub">${esc(q.note)}</div>` : ''}
+        <div class="base" id="${q.id}_base"></div>
+      </article>`;
+
+    const cardTreemap = (q, d) => `
+      <article class="card" id="c-${q.id}" data-reveal="card"${d ? ` style="--d:${d}"` : ''}>
+        <div class="card-hd"><h3>${esc(q.t)}</h3><div class="chips" id="${q.id}_chips"></div></div>
+        <div class="treemap" id="${q.id}_treemap" aria-live="polite"></div>
+        ${q.note ? `<div class="sub">${esc(q.note)}</div>` : ''}
+        <div class="base" id="${q.id}_base"></div>
+      </article>`;
+
+    function buildSections() {
+      const s = [];
+      /* 01 · Perfil ------------------------------------------------ */
+      s.push(`<section id="perfil">
+        <div class="s-head" data-reveal><span>01</span><h2>Perfil del <em>encuestado</em></h2></div>
+        <p class="s-lede" data-reveal>Quién pasó por la pop up de Rambla Catalunya y contestó la encuesta: reparto
+          por género y edad, situación académica y, para quien estudia, en qué etapa lo hace.</p>
+        <div class="grid">
+          <article class="card span3" id="c-edad" data-reveal="card">
+            <div class="card-hd">
+              <h3>Distribución por edad</h3>
+              <div class="chips" id="edad_chips"></div>
+            </div>
+            <div class="cv cv-260" id="edad_cv"><canvas id="cv-edad"></canvas></div>
+            <div class="base" id="edad_base"></div>
+          </article>
+        </div>
+        <div class="grid g-2">
+          ${cardLeaderboard(Q.q1)}
+          ${cardBarH(Q.q2, 1)}
+        </div>
+      </section>`);
+
+      /* 02 · Hábitos de estudio ------------------------------------ */
+      s.push(`<section id="habitos">
+        <div class="s-head" data-reveal><span>02</span><h2>Hábitos de <em>estudio</em></h2></div>
+        <p class="s-lede" data-reveal>Con qué método estudia realmente esta muestra. Es el punto de partida del
+          producto: la flashcard compite contra una rutina ya instalada.</p>
+        <div class="grid">
+          ${cardTreemap(Q.q3)}
+        </div>
+      </section>`);
+
+      /* 03 · Las flashcards ---------------------------------------- */
+      s.push(`<section id="flashcards">
+        <div class="s-head" data-reveal><span>03</span><h2>Las flashcards de <em>Oxford</em></h2></div>
+        <p class="s-lede" data-reveal>Uso real del producto entregado, lectura del código de color, utilidad
+          percibida, formato preferido y penetración de Scribzee, la app que las digitaliza.</p>
+        <div class="grid g-2">
+          ${cardBarH(Q.q4)}
+          ${cardBarH(Q.q8)}
+        </div>
+        <div class="grid g-3">
+          ${cardBarH(Q.q5, 1)}
+          ${cardBarH(Q.q6)}
+          ${cardBarH(Q.q7, 1)}
+        </div>
+      </section>`);
+
+      /* 04 · Experiencia ------------------------------------------- */
+      s.push(`<div class="section-pair">
+      <section id="experiencia">
+        <div class="s-head" data-reveal><span>04</span><h2>La experiencia en la <em>pop up</em></h2></div>
+        <div class="grid">
+          ${cardBarH(Q.q9)}
+        </div>
+      </section>
+
+      <section id="marca">
+        <div class="s-head" data-reveal><span>05</span><h2>La marca <em>Oxford</em></h2></div>
+        <div class="grid">
+          ${cardBarH(Q.q10)}
+        </div>
+      </section>
+      </div>`);
+
+      /* 06 · Recomendación ----------------------------------------- */
+      s.push(`<section id="recomendacion">
+        <div class="s-head" data-reveal><span>06</span><h2><em>Recomendación</em></h2></div>
+        <p class="s-lede" data-reveal>${esc(Q.q11.t)} Puntuación de 0 a 10 leída en clave NPS: promotores menos
+          detractores.</p>
+        <div class="grid">
+          <article class="card" id="c-q11" data-reveal="card">
+            <div class="card-hd"><h3>${esc(Q.q11.t)}</h3><div class="chips" id="q11_chips"></div></div>
+            <div class="nps" id="q11_nps"></div>
+            <div class="duo-h">Reparto de la puntuación</div>
+            <div class="cv cv-190" id="q11_cv"><canvas id="cv-q11"></canvas></div>
+            <div class="base" id="q11_base"></div>
+          </article>
+        </div>
+      </section>`);
+
+      /* 07 · Insights ---------------------------------------------- */
+      s.push(`<section id="insights">
+        <div class="s-head" data-reveal><span>07</span><h2>Tres lecturas de <em>negocio</em></h2></div>
+        <div class="reads" id="reads"></div>
+      </section>`);
+
+      $('#caps').innerHTML = s.join('');
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CHART.JS · base común
+       Los scripts de gráficos llegan por `defer`, así que la
+       configuración no puede vivir en el nivel superior: va dentro de
+       `boot()`, ya con Chart cargado.
+       ═══════════════════════════════════════════════════════════ */
+    const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function chartSetup() {
+      Chart.register(ChartDataLabels);
+      Chart.defaults.font.family =
+        "'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif";
+      Chart.defaults.color = C.n600;
+      Chart.defaults.font.weight = 500;
+      Chart.defaults.animation.duration = REDUCED ? 0 : 520;
+      Chart.defaults.animation.easing = 'easeOutQuart';
+      Chart.defaults.plugins.tooltip.cornerRadius = 8;
+      Chart.defaults.plugins.tooltip.titleFont = { weight: 700, size: 12 };
+      Chart.defaults.plugins.tooltip.bodyFont = { weight: 500, size: 12 };
+      Chart.defaults.plugins.tooltip.caretSize = 5;
+    }
+
+    const tip = extra => Object.assign({
+      backgroundColor: 'rgba(15,23,41,.94)', padding: 11, displayColors: false,
+      cornerRadius: 8, boxPadding: 4
+    }, extra || {});
+    const noLegend = { legend: { display: false } };
+
+    const charts = {};
+    function mk(id, cfg) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+      try { charts[id] = new Chart(el, cfg); }
+      catch (e) {
+        console.error('[chart ' + id + ']', e);
+        const box = el.closest('.cv');
+        if (box) box.insertAdjacentHTML('beforeend',
+          '<div class="fail"><b>No se pudo dibujar</b><small>' + esc(e.message) + '</small></div>');
+      }
+    }
+    function clearFail(box) {
+      if (!box) return;
+      const f = box.querySelector('.fail');
+      if (f) f.remove();
+    }
+    function failIn(box, msg) {
+      if (!box) return;
+      clearFail(box);
+      box.insertAdjacentHTML('beforeend',
+        '<div class="fail"><b>Sin datos en esta vista</b><small>' + esc(msg) + '</small></div>');
+    }
+
+    /* Pie de base: siempre visible, porque media docena de preguntas de
+       este cuestionario sólo las ve una parte de la muestra. */
+    function setBase(id, base, total) {
+      const el = document.getElementById(id + '_base');
+      if (!el) return;
+      if (!base) { el.textContent = ''; return; }
+      el.textContent = 'Base: ' + nf(base) + ' respuesta' + (base === 1 ? '' : 's')
+        + (base < total ? ' · ' + pf(pct(base, total)) + ' de los ' + nf(total) + ' encuestados de esta vista' : '');
+    }
+
+    function renderLeaderboard(q, opt) {
+      opt = opt || {};
+      const id = q.id;
+      const st = catRows(VIEW, q.col, { keepOrder: true });
+      const host = document.getElementById(id + '_leaderboard');
+      const chips = document.getElementById(id + '_chips');
+      if (!host) return;
+      if (chips) chips.innerHTML = opt.chips ? opt.chips(st) : '';
+      clearFail(host);
+      if (!st.rows.length) {
+        host.innerHTML = '';
+        return failIn(host, 'Ninguna categoría con respuestas para el filtro activo.');
+      }
+
+      const ranked = st.rows.slice().sort((a, b) => b.value - a.value);
+      const max = ranked[0].value;
+      host.innerHTML = ranked.map((row, i) => {
+        const share = pct(row.value, st.base);
+        const width = pct(row.value, max);
+        return `<div class="leader-row" aria-label="${esc(row.label)}: ${pf(share)}">
+          <span class="leader-rank">${i + 1}</span>
+          <span class="leader-main">
+            <span class="leader-label" title="${esc(row.label)}">${esc(row.label)}</span>
+            <span class="leader-track"><span class="leader-fill" style="width:${width}%"></span></span>
+          </span>
+          <span class="leader-value">${pf(share)}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function treemapLayout(items, x, y, w, h) {
+      if (items.length === 1) return [{ item: items[0], x, y, w, h }];
+      const total = items.reduce((sum, item) => sum + item.value, 0);
+      let acc = 0, split = 1;
+      for (; split < items.length && acc + items[split - 1].value < total / 2; split++) {
+        acc += items[split - 1].value;
+      }
+      const first = items.slice(0, split);
+      const second = items.slice(split);
+      const firstTotal = first.reduce((sum, item) => sum + item.value, 0);
+      if (w >= h) {
+        const firstW = w * firstTotal / total;
+        return treemapLayout(first, x, y, firstW, h)
+          .concat(treemapLayout(second, x + firstW, y, w - firstW, h));
+      }
+      const firstH = h * firstTotal / total;
+      return treemapLayout(first, x, y, w, firstH)
+        .concat(treemapLayout(second, x, y + firstH, w, h - firstH));
+    }
+
+    function renderTreemap(q, opt) {
+      opt = opt || {};
+      const id = q.id;
+      const st = catRows(VIEW, q.col);
+      const host = document.getElementById(id + '_treemap');
+      const chips = document.getElementById(id + '_chips');
+      if (!host) return;
+      if (chips) chips.innerHTML = opt.chips ? opt.chips(st) : '';
+      clearFail(host);
+      if (!st.rows.length) {
+        host.innerHTML = '';
+        return failIn(host, 'Ninguna técnica con respuestas para el filtro activo.');
+      }
+
+      const colors = ['#23355F', '#375395', '#5B72A8', '#E0253F', '#C21D03', '#8798BF'];
+      const rects = treemapLayout(st.rows, 0, 0, 100, 100);
+      host.innerHTML = rects.map(({ item, x, y, w, h }, i) => {
+        const color = NEUTRAL_RE.test(item.label) ? C.n300 : colors[i % colors.length];
+        const share = pct(item.value, st.base);
+        return `<div class="treemap-tile" title="${esc(item.label)}: ${pf(share)}"
+          style="left:${x}%;top:${y}%;width:${w}%;height:${h}%;--tile:${color};--tile-ink:${inkOn(color)}">
+          <strong>${esc(item.label)}</strong><span>${pf(share)}</span>
+        </div>`;
+      }).join('');
+      fitTreemap(host);
+      if (!host._fitRO && window.ResizeObserver) {
+        host._fitRO = new ResizeObserver(() => fitTreemap(host));
+        host._fitRO.observe(host);
+        if (document.fonts) document.fonts.ready.then(() => fitTreemap(host));
+      }
+    }
+
+    /* Ajuste de etiquetas por tesela: baja el cuerpo hasta que el texto
+       cabe; si ni así, lo gira en vertical; y como último recurso oculta
+       el porcentaje (sigue en el title). La etiqueta nunca se recorta. */
+    function fitTreemap(host) {
+      host.querySelectorAll('.treemap-tile').forEach(t => {
+        const s = t.querySelector('strong');
+        t.classList.remove('is-vert', 'no-pct');
+        s.style.fontSize = '';
+        if (!t.clientWidth) return;
+        const fits = () => t.scrollWidth <= t.clientWidth + 1 && t.scrollHeight <= t.clientHeight + 1
+          && s.scrollWidth <= s.clientWidth + 1 && s.scrollHeight <= s.clientHeight + 1;
+        if (fits()) return;
+        const base = parseFloat(getComputedStyle(s).fontSize);
+        for (let f = base - 1; f >= 10; f--) { s.style.fontSize = f + 'px'; if (fits()) return; }
+        t.classList.add('is-vert');
+        for (let f = base; f >= 8; f--) { s.style.fontSize = f + 'px'; if (fits()) return; }
+        t.classList.add('no-pct');
+      });
+    }
+
+    function renderDonut(q, opt) {
+      opt = opt || {};
+      const id = q.id;
+      const st = catRows(VIEW, q.col, { keepOrder: q.keepOrder });
+      const box = document.getElementById(id + '_cv');
+      const chips = document.getElementById(id + '_chips');
+      if (!box) return;
+      box.classList.add('cv-donut');
+      if (charts['cv-' + id]) { charts['cv-' + id].destroy(); delete charts['cv-' + id]; }
+      if (chips) chips.innerHTML = opt.chips ? opt.chips(st) : '';
+      setBase(id, st.base, VIEW.length);
+      if (!st.rows.length) {
+        return failIn(box, 'Ninguna categoría con respuestas para el filtro activo.');
+      }
+      clearFail(box);
+      const colors = st.rows.map((r, i) => opt.colorFn
+        ? opt.colorFn(r, i)
+        : (NEUTRAL_RE.test(r.label) ? C.n300 : BLUE_RAMP[i % BLUE_RAMP.length]));
+      mk('cv-' + id, {
+        type: 'doughnut',
+        data: {
+          labels: st.rows.map(r => r.label),
+          datasets: [{
+            data: st.rows.map(r => r.value),
+            backgroundColor: colors,
+            borderColor: '#FFFFFF',
+            borderWidth: 3,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          cutout: '60%',
+          layout: { padding: { top: 4, right: 8, bottom: 4, left: 8 } },
+          plugins: {
+            legend: {
+              display: true, position: opt.legendPosition || 'bottom',
+              labels: { usePointStyle: true, pointStyle: 'circle', padding: 10,
+                font: { size: 11, weight: 700 }, color: C.ink }
+            },
+            tooltip: tip({
+              callbacks: {
+                label: c => ' ' + pf(pct(c.parsed, st.base))
+              }
+            }),
+            datalabels: {
+              display: c => pct(c.dataset.data[c.dataIndex], st.base) >= 6,
+              color: c => inkOn(colors[c.dataIndex]),
+              font: { size: 11, weight: 800 },
+              formatter: v => pf(pct(v, st.base))
+            }
+          }
+        }
+      });
+    }
+
+    /* ── Barras horizontales ────────────────────────────────────── */
+    function renderBarH(q, opt) {
+      opt = opt || {};
+      const id = q.id, col = q.col;
+      const st = catRows(VIEW, col, { keepOrder: q.keepOrder });
+      /* Con `cats` el eje dibuja la escala entera, en su orden y con las
+         opciones a cero incluidas; sin ella, sólo las categorías votadas. */
+      const rows = opt.cats
+        ? opt.cats.map((label, i) => ({
+          label, i, value: (st.all.find(r => r.label === label) || { value: 0 }).value
+        }))
+        : st.rows;
+      const box = document.getElementById(id + '_cv');
+      const chips = document.getElementById(id + '_chips');
+      if (box) box.style.height = (opt.height || (rows.length ? hBarH(rows.length) : 170)) + 'px';
+      if (charts['cv-' + id]) { charts['cv-' + id].destroy(); delete charts['cv-' + id]; }
+      if (chips) chips.innerHTML = opt.chips ? opt.chips(st) : '';
+      setBase(id, st.base, VIEW.length);
+      if (!st.base || !rows.length) {
+        return failIn(box, 'Ninguna categoría con respuestas para el filtro activo.');
+      }
+      clearFail(box);
+      const ramp = opt.ramp || BLUE_RAMP;
+      const colors = rows.map((r, i) => opt.colorFn
+        ? opt.colorFn(r, i)
+        : (NEUTRAL_RE.test(r.label) ? C.n300 : ramp[i % ramp.length]));
+      const maxV = Math.max(...rows.map(r => r.value));
+      /* Presupuesto del rótulo: poco más de un tercio del lienzo. Por
+         encima de eso Chart.js deja de ensanchar el eje y recorta. */
+      const TICK_FS = 11.5;
+      const boxW = (box && box.clientWidth) || 400;
+      const budget = Math.max(88, Math.min(340, boxW * 0.36));
+      const mctx = measureCtx(TICK_FS, 600);
+      mk('cv-' + id, {
+        type: 'bar',
+        data: {
+          labels: rows.map(r => wrapLabel(r.label, mctx, budget, 3)),
+          datasets: [{
+            data: rows.map(r => r.value),
+            backgroundColor: colors, borderRadius: 5, maxBarThickness: 26
+          }]
+        },
+        options: {
+          indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+          layout: { padding: { right: 46, top: 2, bottom: 2 } },
+          scales: {
+            x: { display: false, beginAtZero: true, suggestedMax: maxV * 1.06 },
+            y: {
+              grid: { display: false, drawBorder: false },
+              border: { display: false },
+              ticks: { font: { size: TICK_FS, weight: 600 }, color: C.ink, padding: 6, autoSkip: false }
+            }
+          },
+          plugins: {
+            ...noLegend,
+            tooltip: tip({
+              callbacks: {
+                title: c => rows[c[0].dataIndex].label,
+                label: c => pf(pct(c.parsed.x, st.base))
+              }
+            }),
+            datalabels: {
+              anchor: 'end', align: 'end', offset: 6, clamp: true,
+              color: C.ink, font: { size: 11.5, weight: 800 },
+              formatter: v => pf(pct(v, st.base))
+            }
+          }
+        }
+      });
+    }
+
+    /* ── Distribución por edad ──────────────────────────────────── */
+    /* Cuatro insignias sobre el gráfico: el reparto por género (que no
+       necesita un gráfico propio, son dos cifras) y los dos estadísticos
+       que resumen la edad, media y moda. */
+    function renderAge() {
+      const counts = Object.fromEntries(BANDS.map(b => [b, 0]));
+      let n = 0, sum = 0;
+      const ageFreq = new Map();
+      const gen = { 0: 0, 1: 0, 2: 0 };
+      for (const r of VIEW) {
+        gen[r[I_GEN]]++;
+        const b = bandOfAge(r[I_AGE]);
+        if (!b) continue;
+        counts[b]++; n++; sum += r[I_AGE];
+        ageFreq.set(r[I_AGE], (ageFreq.get(r[I_AGE]) || 0) + 1);
+      }
+      const box = document.getElementById('edad_cv');
+      if (charts['cv-edad']) { charts['cv-edad'].destroy(); delete charts['cv-edad']; }
+      const chips = $('#edad_chips');
+      const genDecl = gen[0] + gen[1];
+
+      /* Moda: la edad exacta más repetida. Con empate gana la menor, para
+         que la cifra no baile entre recargas. */
+      let mode = null, modeN = 0;
+      [...ageFreq.entries()].sort((a, b) => a[0] - b[0]).forEach(([a, c]) => {
+        if (c > modeN) { modeN = c; mode = a; }
+      });
+
+      if (chips) {
+        chips.innerHTML =
+          `<span class="scorechip gen" title="Sobre quienes declaran género">
+             <i style="background:${GEN_COLOR[0]}"></i>Femenino <b>${genDecl ? pf(pct(gen[0], genDecl), 0) : '—'}</b></span>` +
+          `<span class="scorechip gen" title="Sobre quienes declaran género">
+             <i style="background:${GEN_COLOR[1]}"></i>Masculino <b>${genDecl ? pf(pct(gen[1], genDecl), 0) : '—'}</b></span>` +
+          `<span class="scorechip">Edad promedio <b>${n ? df(sum / n, 1) : '—'}</b></span>` +
+          `<span class="scorechip">Moda de la edad <b>${mode !== null ? mode : '—'}</b></span>`;
+      }
+
+      const el = document.getElementById('edad_base');
+      if (el) el.textContent = n
+        ? 'Base: ' + nf(n) + ' encuestados con edad declarada · género declarado por ' + nf(genDecl)
+        + (gen[2] ? ' (' + nf(gen[2]) + ' sin declarar)' : '')
+        : '';
+
+      if (!n) {
+        return failIn(box, 'Ningún encuestado con edad declarada en el filtro activo.');
+      }
+      clearFail(box);
+      const vals = BANDS.map(b => counts[b]);
+      mk('cv-edad', {
+        type: 'bar',
+        data: {
+          labels: BANDS,
+          datasets: [{
+            data: vals,
+            backgroundColor: C.b500,
+            borderRadius: 6, maxBarThickness: 84
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          layout: { padding: { top: 24 } },
+          scales: {
+            y: { display: false, beginAtZero: true, grace: '16%' },
+            x: {
+              grid: { display: false, drawBorder: false }, border: { display: false },
+              ticks: { font: { size: 12, weight: 700 }, color: C.ink }
+            }
+          },
+          plugins: {
+            ...noLegend,
+            tooltip: tip({
+              callbacks: {
+                title: c => c[0].label + ' años',
+                label: c => pf(pct(c.parsed.y, n))
+              }
+            }),
+            datalabels: {
+              anchor: 'end', align: 'end', offset: 4, clamp: true,
+              color: C.ink, font: { size: 12, weight: 800 },
+              formatter: v => v ? pf(pct(v, n)) : ''
+            }
+          }
+        }
+      });
+    }
+
+    /* ── NPS ────────────────────────────────────────────────────── */
+    const NPS_C = { det: C.red2, pas: C.b100, prom: C.b500 };
+    function renderNPS(q) {
+      const id = q.id, col = q.col;
+      const a = npsOf(VIEW, col);
+      const host = document.getElementById(id + '_nps');
+      const chips = document.getElementById(id + '_chips');
+      const box = document.getElementById(id + '_cv');
+      if (charts['cv-' + id]) { charts['cv-' + id].destroy(); delete charts['cv-' + id]; }
+      setBase(id, a.n, VIEW.length);
+      if (!a.n) {
+        if (host) host.innerHTML = '';
+        if (chips) chips.innerHTML = '';
+        return failIn(box, 'Nadie ha puntuado la recomendación en el filtro activo.');
+      }
+      clearFail(box);
+      const st = scaleStats(VIEW, col, 0, 10);
+      const parts = [
+        { k: 'det', n: 'Detractores (0-6)', v: a.det, c: NPS_C.det },
+        { k: 'pas', n: 'Pasivos (7-8)', v: a.pas, c: NPS_C.pas },
+        { k: 'prom', n: 'Promotores (9-10)', v: a.prom, c: NPS_C.prom }
+      ];
+      if (host) {
+        host.innerHTML = `
+          <div class="nps-score">
+            <b>${a.score >= 0 ? '+' : '−'}${df(Math.abs(a.score), 0)}</b>
+            <span>NPS</span>
+            <div class="nps-scale">
+              <i style="left:50%"></i><em class="lo">−100</em><em class="hi">+100</em>
+            </div>
+          </div>
+          <div>
+            <div class="nps-split">
+              ${parts.map(p => `<div style="width:0;background:${p.c};color:${inkOn(p.c)}"
+                data-w="${pct(p.v, a.n).toFixed(2)}" title="${esc(p.n)}: ${pf(pct(p.v, a.n))}">${pct(p.v, a.n) >= 9 ? pf(pct(p.v, a.n), 0) : ''}</div>`).join('')}
+            </div>
+            <div class="nps-key">
+              ${parts.map(p => `<span><i style="background:${p.c}"></i>${esc(p.n)} <b>${pf(pct(p.v, a.n))}</b></span>`).join('')}
+            </div>
+          </div>`;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          host.querySelectorAll('.nps-split div').forEach(e => e.style.width = e.dataset.w + '%');
+          const mark = host.querySelector('.nps-scale i');
+          if (mark) mark.style.left = ((a.score + 100) / 2).toFixed(1) + '%';
+        }));
+      }
+      if (chips) chips.innerHTML =
+        `<span class="scorechip">Media <b>${df(a.mean, 2)}</b>`
+        + benchMini('Media', BENCH.q11_mean, a.mean, 'mean') + `</span>` +
+        `<span class="scorechip">Promotores <b>${pf(pct(a.prom, a.n))}</b>`
+        + benchMini('Recomendarían', BENCH.q11_rec, pct(a.prom, a.n)) + `</span>`;
+      mk('cv-' + id, {
+        type: 'bar',
+        data: {
+          labels: st.hist.map((_, i) => String(i)),
+          datasets: [{
+            data: st.hist,
+            backgroundColor: st.hist.map((_, i) => i >= 9 ? NPS_C.prom : i >= 7 ? NPS_C.pas : NPS_C.det),
+            borderRadius: 4, maxBarThickness: 44
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          layout: { padding: { top: 20 } },
+          scales: {
+            y: { display: false, beginAtZero: true, grace: '14%' },
+            x: {
+              grid: { display: false, drawBorder: false }, border: { display: false },
+              ticks: { font: { size: 11.5, weight: 700 }, color: C.n600 }
+            }
+          },
+          plugins: {
+            ...noLegend,
+            tooltip: tip({
+              callbacks: {
+                title: c => 'Puntuación ' + c[0].label,
+                label: c => pf(pct(c.parsed.y, st.n))
+              }
+            }),
+            datalabels: {
+              anchor: 'end', align: 'end', offset: 2, clamp: true,
+              color: C.ink, font: { size: 10.5, weight: 800 },
+              formatter: v => v ? pf(pct(v, st.n), 0) : ''
+            }
+          }
+        }
+      });
+    }
+
+    /* ── KPI de cabecera ────────────────────────────────────────── */
+    function renderKPIs() {
+      const estudia = countAny(VIEW, Q.q1.col,
+        ['Sí, estoy estudiando', 'Sí, estoy estudiando y también trabajando']);
+      const usadas = countAny(VIEW, Q.q4.col, ['Sí, las he usado']);
+      const pop = ordMean(VIEW, Q.q9.col, SCALE_CAL);
+      const rec = npsOf(VIEW, Q.q11.col);
+      /* Los tres indicadores con referencia de 2025 llevan su minipíldora
+         aquí arriba, para que la comparación se vea antes de bajar. */
+      const color = ordMean(VIEW, Q.q5.col, SCALE_CAL);
+      const seguro = countAny(VIEW, Q.q6.col, ['Sí, seguro']);
+
+      const kpi = (v, u, l, note, bench) => `<div class="kpi">
+        <div class="kpi-v">${v}${u ? `<span class="kpi-u">${u}</span>` : ''}</div>
+        <div class="kpi-l">${l}</div>`
+        + (note || bench ? `<div class="kpi-n">${note || ''}${bench || ''}</div>` : '')
+        + `</div>`;
+
+      $('#kpis').innerHTML =
+        kpi(nf(VIEW.length), '', 'Encuestados',
+          isFiltered() ? 'de ' + nf(ROWS.length) + ' en total' : 'muestra completa') +
+        kpi(estudia.base ? pf(estudia.pct, 0) : '—', '', 'Estudian actualmente',
+          estudia.base ? nf(estudia.hit) + ' de ' + nf(estudia.base) : '') +
+        kpi(usadas.base ? pf(usadas.pct, 0) : '—', '', 'Han usado las Flashcards',
+          usadas.base ? nf(usadas.hit) + ' de ' + nf(usadas.base) : '') +
+        kpi(color.n ? pf(color.t2b, 0) : '—', '', 'Top-2-Box del código de color',
+          color.n ? 'Sólo quienes ya las han usado' : '',
+          color.n ? benchMini('Top-2-Box', BENCH.q5_t2b, color.t2b) : '') +
+        kpi(seguro.base ? pf(seguro.pct, 0) : '—', '', '«Sí, seguro» que ayudarán a estudiar',
+          seguro.base ? 'Sólo quienes ya las han usado' : '',
+          seguro.base ? benchMini('Sí, seguro', BENCH.q6_seguro, seguro.pct) : '') +
+        kpi(pop.n ? df(pop.mean, 2) : '—', pop.n ? '/5' : '', 'Valoración de la experiencia en el pop-up',
+          pop.n ? 'Top-2-Box ' + pf(pop.t2b, 0) : '') +
+        kpi(rec.n ? df(rec.mean, 2) : '—', rec.n ? '/10' : '', 'Recomendación',
+          rec.n ? 'NPS ' + (rec.score >= 0 ? '+' : '−') + df(Math.abs(rec.score), 0) : '',
+          rec.n ? benchMini('Media', BENCH.q11_mean, rec.mean, 'mean') : '');
+
+      $('#pdfhero-n').textContent = nf(VIEW.length) + ' encuestados'
+        + (isFiltered() ? ' (filtrado)' : '');
+    }
+
+    /* ── Lecturas de negocio ────────────────────────────────────── */
+    /* Se recalculan con el filtro y están redactadas en comparativos que
+       el propio dato resuelve: ninguna frase afirma una dirección que no
+       venga de la cifra que lleva al lado. */
+    const signed = v => (v >= 0 ? '+' : '−') + df(Math.abs(v), 0);
+
+    function renderReads() {
+      const host = $('#reads');
+      if (!host) return;
+      const cUso = IX[Q.q4.col], cTec = IX[Q.q3.col], cApp = IX[Q.q8.col];
+      const USADA = DATA.cats[Q.q4.col].indexOf('Sí, las he usado');
+
+      const usr = VIEW.filter(r => r[cUso] === USADA);
+      const nou = VIEW.filter(r => r[cUso] >= 0 && r[cUso] !== USADA);
+      const npsU = npsOf(usr, Q.q11.col), npsN = npsOf(nou, Q.q11.col);
+      const popU = ordMean(usr, Q.q9.col, SCALE_CAL), popN = ordMean(nou, Q.q9.col, SCALE_CAL);
+
+      const ayuda = countAny(usr, Q.q6.col, ['Sí, seguro', 'Sí, posiblemente']);
+      const seguro = countAny(usr, Q.q6.col, ['Sí, seguro']);
+
+      const tec = catRows(VIEW, Q.q3.col);
+      const tecTop = tec.rows.find(r => !NEUTRAL_RE.test(r.label));
+      const tecFc = tec.all.find(r => /flashcard/i.test(r.label));
+
+      const cards = [];
+
+      /* 1 · el producto se defiende solo en cuanto se prueba */
+      if (npsU.n && npsN.n) {
+        const d = npsU.score - npsN.score;
+        cards.push({
+          w: d < 0,
+          h: d >= 0
+            ? 'Estrenar la flashcard es lo que dispara la recomendación'
+            : 'Quien ya ha usado las flashcards recomienda menos que quien no',
+          p: `Quienes ya han usado las flashcards dan un NPS de <b>${signed(npsU.score)}</b>
+              (media ${df(npsU.mean, 2)} sobre 10); quienes todavía no las han estrenado se quedan en
+              <b>${signed(npsN.score)}</b> (${df(npsN.mean, 2)}). Son <b>${df(Math.abs(d), 0)} puntos</b> de NPS
+              ${d >= 0 ? 'a favor de quien prueba' : 'en contra de quien prueba'}${popU.n && popN.n
+              ? `, y la misma brecha aparece en la nota de la pop up: <b>${df(popU.mean, 2)}</b> frente a
+                 <b>${df(popN.mean, 2)}</b> sobre 5`
+              : ''}. ${d >= 0
+              ? 'La barrera no es el producto: es el estreno. Todo lo que acorte el tiempo hasta el primer uso rinde.'
+              : 'Conviene revisar qué encuentra quien abre el paquete: la experiencia de uso no está cumpliendo lo que promete el muestreo.'}`
+        });
+      }
+
+      /* 2 · utilidad percibida entre quienes ya las usan */
+      if (ayuda.base) {
+        cards.push({
+          w: ayuda.pct < 60,
+          h: `La utilidad percibida es casi unánime entre quienes las han usado`,
+          p: `De las <b>${nf(ayuda.base)}</b> personas que han estrenado las flashcards,
+              <b>${pf(ayuda.pct)}</b> cree que le ayudarán a estudiar mejor
+              ${seguro.base ? `y <b>${pf(seguro.pct)}</b> lo afirma sin matices («Sí, seguro»)` : ''}.
+              ${ayuda.pct >= 90
+              ? 'Ni una sola respuesta negativa: el argumento de venta ya está validado por el propio usuario, así que el mensaje puede apoyarse en el beneficio de estudio y no sólo en la calidad del papel.'
+              : 'La convicción existe pero no es total: merece la pena reforzar el «cómo se usa» en el propio empaquetado.'}`
+        });
+      }
+
+      /* 3 · la técnica todavía no es un hábito */
+      if (tecTop && tec.base) {
+        const fcV = tecFc ? tecFc.value : 0;
+        const gap = pct(tecTop.value, tec.base) - pct(fcV, tec.base);
+        cards.push({
+          w: true,
+          h: 'El método flashcard aún no es un hábito: la categoría está por construir',
+          p: `<b>${pf(pct(tecTop.value, tec.base))}</b> declara estudiar con «${esc(tecTop.label)}», frente al
+              <b>${pf(pct(fcV, tec.base))}</b> que menciona las flashcards como técnica propia:
+              <b>${df(Math.abs(gap), 1)} puntos</b> de distancia. El producto no compite con otra ficha, compite
+              con el subrayado de toda la vida, así que la palanca no es el precio ni el diseño: es enseñar el
+              método. Contenido de «cómo estudiar con flashcards» en el propio pack y en la pop up.`
+        });
+      }
+
+      if (!cards.length) {
+        host.innerHTML = `<div class="read warn"><h4>Sin base suficiente</h4>
+          <p>El filtro activo deja demasiadas pocas respuestas para sostener una lectura. Quita algún filtro
+          para volver a ver las conclusiones.</p></div>`;
+        return;
+      }
+
+      /* Con el filtro puesto la muestra se queda corta enseguida: la lectura
+         sigue siendo correcta, pero conviene decir en voz alta que se está
+         leyendo sobre pocas respuestas. */
+      const thin = VIEW.length < 30
+        ? `<div class="read warn" data-reveal style="--d:4">
+             <h4>Base corta: lee estas cifras con cautela</h4>
+             <p>El filtro activo deja <b>${nf(VIEW.length)}</b> de ${nf(ROWS.length)} encuestados. Los
+             porcentajes siguen siendo exactos, pero con esta base un par de respuestas mueve varios puntos:
+             sirven para orientar, no para decidir.</p></div>`
+        : '';
+
+      host.innerHTML = cards.slice(0, 3).map((c, i) =>
+        `<div class="read ${c.w ? 'warn' : ''}" data-reveal style="--d:${i}">
+           <h4>${c.h}</h4><p>${c.p}</p></div>`).join('') + thin;
+    }
+
+    /* ── Orquestación ───────────────────────────────────────────── */
+    /* El orden de esta función es el orden del informe. */
+    function render() {
+      VIEW = isFiltered() ? ROWS.filter(passes) : ROWS;
+      renderKPIs();
+
+      /* 1-2 · género (insignias) y edad */
+      renderAge();
+
+      /* 3 · ¿Estudias actualmente? */
+      renderLeaderboard(Q.q1, {
+        chips: st => {
+          const e = countAny(VIEW, Q.q1.col, ['Sí, estoy estudiando', 'Sí, estoy estudiando y también trabajando']);
+          return e.base ? `<span class="scorechip">Estudian <b>${pf(e.pct)}</b></span>` : '';
+        }
+      });
+
+      /* 4 · nivel de educación */
+      renderBarH(Q.q2, {
+        chips: st => st.rows.length
+          ? `<span class="scorechip">Principal <b>${esc(st.rows[0].label)}</b></span>` : ''
+      });
+
+      /* 5 · técnicas de estudio */
+      renderTreemap(Q.q3, {
+        chips: st => {
+          const t = st.rows.find(r => !NEUTRAL_RE.test(r.label));
+          return t ? `<span class="scorechip">${esc(t.label)} <b>${pf(pct(t.value, st.base))}</b></span>` : '';
+        }
+      });
+
+      /* 6 · ¿Has usado las flashcards? */
+      renderDonut(Q.q4, {
+        legendPosition: 'right',
+        colorFn: (r, i) => i === 0 ? C.b500 : C.red,
+        chips: st => {
+          const u = countAny(VIEW, Q.q4.col, ['Sí, las he usado']);
+          return u.base ? `<span class="scorechip">Ya las usan <b>${pf(u.pct)}</b></span>` : '';
+        }
+      });
+
+      /* 7 · código de color */
+      renderBarH(Q.q5, {
+        cats: SCALE_CAL_ALL,
+        colorFn: (r, i) => r.label === 'Aceptable' ? C.red2
+          : (r.label === 'Mejorable' || r.label === 'Mala') ? C.red
+            : BLUE_RAMP[i % BLUE_RAMP.length],
+        chips: st => {
+          const m = ordMean(VIEW, Q.q5.col, SCALE_CAL);
+          return m.n
+            ? `<span class="scorechip">Media <b>${df(m.mean, 2)}</b>/5</span>`
+            + `<span class="scorechip">Top-2-Box <b>${pf(m.t2b)}</b>`
+            + benchMini('Top-2-Box', BENCH.q5_t2b, m.t2b) + `</span>` : '';
+        }
+      });
+
+      /* 8 · ¿te ayudarán a estudiar mejor? · azul para el sí, rojo para el no */
+      renderBarH(Q.q6, {
+        colorFn: (r, i) => /^Sí/i.test(r.label) ? BLUE_RAMP[i % BLUE_RAMP.length] : C.red,
+        chips: st => {
+          const seg = countAny(VIEW, Q.q6.col, ['Sí, seguro']);
+          return seg.base
+            ? `<span class="scorechip">Sí, seguro <b>${pf(seg.pct)}</b>`
+            + benchMini('Sí, seguro', BENCH.q6_seguro, seg.pct) + `</span>` : '';
+        }
+      });
+
+      /* 9 · formato preferido */
+      renderBarH(Q.q7, {
+        chips: st => st.rows.length
+          ? `<span class="scorechip">Preferido <b>${pf(pct(st.rows[0].value, st.base))}</b></span>` : ''
+      });
+
+      /* 10 · Scribzee */
+      renderDonut(Q.q8, {
+        legendPosition: 'right',
+        colorFn: r => /^Sí, la he usado y me parece útil$/i.test(r.label) ? C.b500
+          : /^Sí/i.test(r.label) ? C.n300 : C.red,
+        chips: st => {
+          const a = countAny(VIEW, Q.q8.col,
+            ['Sí, la he usado y me parece útil', 'Sí, la he usado, pero no me parece útil']);
+          return a.base ? `<span class="scorechip">Han usado la app <b>${pf(a.pct)}</b></span>` : '';
+        }
+      });
+
+      /* 11 · valoración de la pop up */
+      renderBarH(Q.q9, {
+        height: 356,
+        /* El tramo neutro en gris y el negativo en los dos rojos: la barra
+           dice por color de qué lado de la escala cae antes de leer nada. */
+        colorFn: (r, i) => r.label === 'Aceptable' ? C.n300
+          : r.label === 'Mejorable' ? C.red2
+            : r.label === 'Mala' ? C.red
+              : BLUE_RAMP[i % BLUE_RAMP.length],
+        chips: st => {
+          const m = ordMean(VIEW, Q.q9.col, SCALE_CAL);
+          return m.n
+            ? `<span class="scorechip">Media <b>${df(m.mean, 2)}</b>/5</span>`
+            + `<span class="scorechip">Top-2-Box <b>${pf(m.t2b)}</b></span>` : '';
+        }
+      });
+
+      /* 12 · qué destacarías de Oxford */
+      renderBarH(Q.q10, {
+        height: 356,
+        chips: st => st.rows.length
+          ? `<span class="scorechip">Tema líder <b>${pf(pct(st.rows[0].value, st.base))}</b></span>` : ''
+      });
+
+      /* 13 · recomendación · NPS */
+      renderNPS(Q.q11);
+
+      renderReads();
+      updateFilterUI();
+      armReveal();
+    }
+
+    /* ── Filtros ────────────────────────────────────────────────── */
+    function buildFilters() {
+      $('#f-gen').innerHTML = [0, 1].map(k =>
+        `<button class="chip-f" type="button" data-k="gen" data-v="${k}" aria-pressed="false">
+           ${GEN_LABEL[k]}</button>`).join('');
+      $('#f-age').innerHTML = BANDS.map(b =>
+        `<button class="chip-f" type="button" data-k="age" data-v="${b}" aria-pressed="false">
+           ${b}</button>`).join('');
+
+      $$('.chip-f').forEach(btn => btn.addEventListener('click', () => {
+        const set = btn.dataset.k === 'gen' ? FILT.gen : FILT.age;
+        const v = btn.dataset.k === 'gen' ? +btn.dataset.v : btn.dataset.v;
+        if (set.has(v)) set.delete(v); else set.add(v);
+        render();
+      }));
+      $('#reset').addEventListener('click', clearFilters);
+      $('#fbar-clear').addEventListener('click', clearFilters);
+    }
+
+    function clearFilters() {
+      FILT.gen.clear(); FILT.age.clear();
+      render();
+    }
+
+    function updateFilterUI() {
+      $$('.chip-f').forEach(btn => {
+        const set = btn.dataset.k === 'gen' ? FILT.gen : FILT.age;
+        const v = btn.dataset.k === 'gen' ? +btn.dataset.v : btn.dataset.v;
+        btn.setAttribute('aria-pressed', String(set.has(v)));
+      });
+      $('#reset').disabled = !isFiltered();
+      const bar = $('#fbar');
+      if (isFiltered()) {
+        const bits = [];
+        if (FILT.gen.size) bits.push('Género: ' + [...FILT.gen].sort().map(k => GEN_LABEL[k]).join(', '));
+        if (FILT.age.size) bits.push('Edad: ' + BANDS.filter(b => FILT.age.has(b)).join(', '));
+        $('#fbar-txt').innerHTML = 'Filtro activo · ' + esc(bits.join(' · '))
+          + ' · <b>' + nf(VIEW.length) + '</b> de ' + nf(ROWS.length) + ' encuestados';
+        bar.classList.add('on');
+      } else bar.classList.remove('on');
+    }
+
+    /* ── Desplegable de preguntas ───────────────────────────────── */
+    function buildQList() {
+      $('#qlist-ol').innerHTML = QLIST.map(q =>
+        `<li><a href="#${q.h}">${esc(q.t)}</a></li>`).join('');
+      const btn = $('#qfold');
+      btn.addEventListener('click', () =>
+        btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'));
+      $('#qlist-ol').addEventListener('click', e => {
+        if (e.target.closest('a') && innerWidth <= 980) closeRail();
+      });
+    }
+
+    /* ── Menú de secciones ──────────────────────────────────────── */
+    function buildSecNav() {
+      $('#seclist-ol').innerHTML = SECTIONS.map(sec =>
+        `<li><a href="#${sec.h}">${esc(sec.t)}</a></li>`).join('');
+      $('#seclist-ol').addEventListener('click', e => {
+        if (e.target.closest('a') && innerWidth <= 980) closeRail();
+      });
+    }
+
+    function armSecNav() {
+      const links = $$('#seclist-ol a');
+      if (!links.length) return;
+      const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+      const spy = new IntersectionObserver(es => {
+        es.forEach(e => {
+          const a = map.get(e.target.id);
+          if (!a) return;
+          a.classList.toggle('active', e.isIntersecting);
+        });
+      }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+      SECTIONS.forEach(sec => {
+        const el = document.getElementById(sec.h);
+        if (el) spy.observe(el);
+      });
+    }
+
+    /* ── Rail en móvil ──────────────────────────────────────────── */
+    const closeRail = () => $('#rail').classList.remove('open');
+    $('#burger').addEventListener('click', () => $('#rail').classList.toggle('open'));
+    $('#scrim').addEventListener('click', closeRail);
+
+    /* ── Entradas al entrar en pantalla ─────────────────────────── */
+    let io = null;
+    function armReveal() {
+      if (REDUCED) return;
+      if (!io) {
+        io = new IntersectionObserver(es => es.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('is-inview'); io.unobserve(e.target); }
+        }), { rootMargin: '0px 0px -8% 0px' });
+      }
+      $$('[data-reveal]:not(.rv)').forEach(el => {
+        el.classList.add('rv');
+        const r = el.getBoundingClientRect();
+        if (r.top < innerHeight && r.bottom > 0) el.classList.add('is-inview');
+        else io.observe(el);
+      });
+    }
+
+    /* Titular palabra a palabra: si el script no llega, el <h1> se ve igual. */
+    function splitWords(el) {
+      if (!el || el.dataset.anim === 'done') return;
+      const walk = node => {
+        [...node.childNodes].forEach(n => {
+          if (n.nodeType === 3) {
+            const parts = n.textContent.split(/(\s+)/).filter(s => s !== '');
+            if (!parts.length) return;
+            const frag = document.createDocumentFragment();
+            parts.forEach(p => {
+              if (/^\s+$/.test(p)) frag.appendChild(document.createTextNode(p));
+              else {
+                const s = document.createElement('span');
+                s.className = 'aw'; s.textContent = p;
+                frag.appendChild(s);
+              }
+            });
+            n.replaceWith(frag);
+          } else if (n.nodeType === 1) walk(n);
+        });
+      };
+      walk(el);
+      el.dataset.anim = 'done';
+      const aws = [...el.querySelectorAll('.aw')];
+      aws.forEach((w, i) => w.style.transitionDelay = (i * 28) + 'ms');
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       EXPORTACIÓN A PDF · A4 apaisado, cabecera en cada página
+       Se captura por secciones y se empaquetan en páginas cortando
+       siempre por el hueco entre tarjetas: ningún gráfico se parte.
+       ═══════════════════════════════════════════════════════════ */
+    const PDF = { M: 6, SCALE: 2 };
+
+    /* html2canvas no siempre pinta un <svg> en línea igual que el navegador.
+       Se sustituye cada uno por un <img> con el mismo SVG serializado, que
+       sí es un recurso que sabe dibujar, y se restaura al terminar. */
+    async function svgToImg() {
+      const swapped = [];
+      const svgs = $$('.canvas svg, .pdfhero svg');
+      for (const svg of svgs) {
+        const r = svg.getBoundingClientRect();
+        if (!r.width || !r.height) continue;
+        const clone = svg.cloneNode(true);
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        clone.setAttribute('width', r.width);
+        clone.setAttribute('height', r.height);
+        const src = 'data:image/svg+xml;charset=utf-8,'
+          + encodeURIComponent(new XMLSerializer().serializeToString(clone));
+        const img = new Image();
+        img.width = r.width; img.height = r.height;
+        img.style.width = r.width + 'px';
+        img.style.height = r.height + 'px';
+        img.style.display = 'block';
+        img.src = src;
+        try { await img.decode(); } catch (e) { continue; }
+        svg.style.display = 'none';
+        svg.parentNode.insertBefore(img, svg);
+        swapped.push({ svg, img });
+      }
+      return swapped;
+    }
+    const svgRestore = sw => sw.forEach(({ svg, img }) => {
+      img.remove(); svg.style.display = '';
+    });
+
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const raf2 = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    function progress(p, txt) {
+      $('#pdfwait-b').style.width = Math.round(p * 100) + '%';
+      if (txt) $('#pdfwait-t').textContent = txt;
+    }
+
+    async function exportPDF() {
+      const btn = $('#btn-pdf');
+      if (btn.disabled) return;
+      if (!window.jspdf || !window.html2canvas) {
+        alert('No se han podido cargar las librerías de exportación. Revisa la conexión e inténtalo de nuevo.');
+        return;
+      }
+      btn.disabled = true;
+      $('#pdfwait').classList.add('on');
+      progress(.02, 'Preparando el informe');
+
+      const scrollY = window.scrollY;
+      document.body.classList.add('pdf-mode');
+      /* Sin animaciones a medias: todo visible antes de capturar. */
+      $$('[data-reveal]').forEach(e => e.classList.add('is-inview'));
+      Object.values(charts).forEach(c => { try { c.resize(); } catch (e) { } });
+      try { await document.fonts.ready; } catch (e) { }
+      await raf2(); await wait(450);
+
+      let swapped = [];
+      try {
+        swapped = await svgToImg();
+        progress(.08, 'Capturando la cabecera');
+
+        const opt = { scale: PDF.SCALE, backgroundColor: '#F7F8FA', useCORS: true, logging: false };
+        const heroCv = await html2canvas($('#pdfhero'), { ...opt, backgroundColor: '#0F1729' });
+
+        const blocks = [$('#apertura'), ...$$('#caps > section'), $('.cta-close')].filter(Boolean);
+        const shots = [];
+        for (let i = 0; i < blocks.length; i++) {
+          const el = blocks[i];
+          const cv = await html2canvas(el, opt);
+          /* Puntos por los que se puede cortar este bloque sin partir nada:
+             los bordes de sus piezas, en píxeles del propio lienzo. */
+          const top = el.getBoundingClientRect().top;
+          const cuts = new Set([cv.height]);
+          el.querySelectorAll('.card, .read, .kpis, .meta, .meta-note')
+            .forEach(p => {
+              const r = p.getBoundingClientRect();
+              cuts.add(Math.max(0, Math.round((r.top - top - 11) * PDF.SCALE)));
+              cuts.add(Math.min(cv.height, Math.round((r.bottom - top + 11) * PDF.SCALE)));
+            });
+          /* Un titular de capítulo no se queda solo al pie de una página:
+             el primer corte válido cae DESPUÉS de la primera pieza de
+             contenido, así que el rótulo siempre viaja con algo debajo. */
+          let headEnd = 0;
+          el.querySelectorAll('.s-head, .s-lede').forEach(p => {
+            headEnd = Math.max(headEnd, Math.round((p.getBoundingClientRect().bottom - top) * PDF.SCALE));
+          });
+          let floor = headEnd ? headEnd + 12 * PDF.SCALE : 0;
+          if (headEnd) {
+            for (const p of el.querySelectorAll('.card, .read')) {
+              const b = Math.round((p.getBoundingClientRect().bottom - top) * PDF.SCALE);
+              if (b > headEnd) { floor = b + 11 * PDF.SCALE; break; }
+            }
+          }
+          /* El suelo nunca puede quedar por encima del propio lienzo: si la
+             sección entera es más corta que su primera pieza «protegida»,
+             el filtro se quedaría sin un solo corte válido y la sección se
+             partiría a ciegas por la mitad. */
+          floor = Math.min(floor, cv.height);
+          shots.push({
+            cv, floor,
+            cuts: [...cuts].filter(c => c >= floor).sort((a, b) => a - b)
+          });
+          progress(.08 + .62 * (i + 1) / blocks.length, 'Capturando sección ' + (i + 1) + ' de ' + blocks.length);
+        }
+
+        progress(.74, 'Montando las páginas');
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+        const PW = doc.internal.pageSize.getWidth();   // 297
+        const PH = doc.internal.pageSize.getHeight();  // 210
+        const CW = PW - PDF.M * 2;
+        const heroH = CW * heroCv.height / heroCv.width;
+        const top = PDF.M + heroH + 4;
+        const avail = PH - top - PDF.M;
+
+        const heroImg = heroCv.toDataURL('image/jpeg', .95);
+        let page = 0, y = top;
+        const newPage = () => {
+          if (page > 0) doc.addPage();
+          page++;
+          doc.setFillColor(247, 248, 250);
+          doc.rect(0, 0, PW, PH, 'F');
+          doc.addImage(heroImg, 'JPEG', PDF.M, PDF.M, CW, heroH, undefined, 'FAST');
+          y = top;
+        };
+        newPage();
+
+        /* Recorta una franja del lienzo de una sección y la coloca. */
+        const place = (cv, y0, y1) => {
+          const h = y1 - y0;
+          if (h <= 2) return;
+          const tmp = document.createElement('canvas');
+          tmp.width = cv.width; tmp.height = h;
+          const cx = tmp.getContext('2d');
+          cx.fillStyle = '#F7F8FA';
+          cx.fillRect(0, 0, tmp.width, tmp.height);
+          cx.drawImage(cv, 0, y0, cv.width, h, 0, 0, cv.width, h);
+          const mm = CW * h / cv.width;
+          doc.addImage(tmp.toDataURL('image/jpeg', .94), 'JPEG', PDF.M, y, CW, mm, undefined, 'FAST');
+          y += mm;
+        };
+
+        for (const s of shots) {
+          let from = 0;
+          while (from < s.cv.height) {
+            let room = PH - PDF.M - y;                       // mm libres en la página
+            if (room < 18) { newPage(); room = avail; }
+            const roomPx = room * s.cv.width / CW;
+            if (s.cv.height - from <= roomPx) { place(s.cv, from, s.cv.height); from = s.cv.height; break; }
+            /* corte seguro: el mayor borde de pieza que cabe en el hueco */
+            const target = from + roomPx;
+            const minPiece = Math.max(from + 60, s.floor || 0);
+            let cut = -1;
+            /* `>=`, no `>`: el primer corte válido de una sección coincide
+               exactamente con su suelo, y con `>` se descartaba a sí mismo.
+               Cuando eso pasaba en una sección más alta que una página, el
+               código caía en el corte a pelo y partía una tarjeta en dos. */
+            for (const c of s.cuts) { if (c >= minPiece && c <= target) cut = c; else if (c > target) break; }
+            if (cut < 0) {
+              /* nada cabe: si la página está empezada se pasa a la siguiente,
+                 y si no, se corta por el máximo. */
+              if (y > top + .5) { newPage(); continue; }
+              cut = Math.round(target);
+            }
+            place(s.cv, from, cut);
+            from = cut;
+            newPage();
+          }
+          y += 4;
+        }
+
+        progress(.96, 'Guardando');
+        const stamp = new Date().toISOString().slice(0, 10);
+        doc.save('Samplia-Insights_Flashcards-Oxford_Rambla-Catalunya_' + stamp + '.pdf');
+      } catch (e) {
+        console.error('[pdf]', e);
+        alert('No se ha podido generar el PDF: ' + e.message);
+      } finally {
+        svgRestore(swapped);
+        document.body.classList.remove('pdf-mode');
+        $('#pdfwait').classList.remove('on');
+        progress(0, '');
+        btn.disabled = false;
+        Object.values(charts).forEach(c => { try { c.resize(); } catch (e) { } });
+        window.scrollTo(0, scrollY);
+      }
+    }
+
+    /* ── Arranque ───────────────────────────────────────────────── */
+    function boot() {
+      chartSetup();
+      $('#logo').src = LOGO;
+      $('#pdflogo').src = LOGO;
+      buildSections();
+      buildFilters();
+      buildQList();
+      buildSecNav();
+      armSecNav();
+      render();
+      splitWords($('.open h1'));
+      $('#btn-pdf').addEventListener('click', exportPDF);
+      $('#stampTxt').textContent = nf(ROWS.length) + ' respuestas cargadas';
+      /* Al cambiar el ancho no basta con reajustar el lienzo: el corte de
+         los rótulos se calcula contra el ancho de la tarjeta, así que un
+         cambio de maqueta obliga a repintar. Un reajuste basta para los
+         movimientos pequeños, que son la mayoría (barra del navegador,
+         teclado del móvil) y no merecen rehacer trece gráficos. */
+      let t = null, lastW = innerWidth;
+      addEventListener('resize', () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          if (Math.abs(innerWidth - lastW) > 40) { lastW = innerWidth; render(); }
+          else Object.values(charts).forEach(c => { try { c.resize(); } catch (e) { } });
+        }, 220);
+      });
+    }
+
+    /* `boot` tiene que correr cuando Chart ya existe. Los `defer` se
+       ejecutan antes de DOMContentLoaded, así que ése es el momento; si el
+       documento ya estuviera listo y la librería no hubiese llegado, se
+       espera a `load`, que es la última red de seguridad. */
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else if (window.Chart) boot();
+    else addEventListener('load', boot);
+
+  </script>
+</body>
+
+</html>
